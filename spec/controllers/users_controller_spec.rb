@@ -60,7 +60,7 @@ describe UsersController do
       end
 
       it "should deny access to 'update'" do
-        get :update, :id => @user, :iser => {}
+        get :update, :id => @user, :user => {}
         response.should redirect_to(signin_path)
       end
     end
@@ -78,7 +78,7 @@ describe UsersController do
       end
 
       it "should require matching users for 'update'" do
-        get :edit, :id => @user, :user => {}
+        get :update, :id => @user, :user => {}
         response.should redirect_to(root_path)
       end
 
