@@ -10,6 +10,40 @@ describe "Microposts" do
     click_button
   end
 
+  describe "sidebar micropost counts" do
+
+    describe "for 0 microposts" do
+
+      it "should list '0 microposts'" do
+        visit root_path
+        response.should have_selector("span", :content => "0 microposts")
+      end
+    end
+
+    describe "for 1 micropost" do
+
+      it "should list '1 micropost'" do
+        visit root_path
+        fill_in :micropost_content, :with => "Lorem ipsum dolor sit"
+        click_button
+        response.should have_selector("span", :content => "1 micropost")
+      end
+    end
+
+    describe "for more that 1 microposts" do
+
+      it "should say '2 microposts'" do
+        visit root_path
+        fill_in :micropost_content, :with => "Here is the first post"
+        click_button
+        fill_in :micropost_content, :with => "Here is another post"
+        click_button
+        response.should have_selector("span", :content => "2 microposts")
+      end
+    end
+
+  end
+
   describe "creation" do
   
     describe "failure" do

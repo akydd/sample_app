@@ -1,0 +1,7 @@
+<h1>Microposts</h1>
+
+<%= will_paginate  %>
+<table class="microposts">
+  <%= render :partial => "shared/feed_item", :collection => @microposts %>
+</table>
+<%= will_paginate %>
