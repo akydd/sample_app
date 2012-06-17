@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.2.5'
 gem 'will_paginate'
 gem 'bootstrap-sass'
+gem 'bcrypt-ruby'
 
 # Asset pipeline stuff for 3.2.5
 group :assets do
