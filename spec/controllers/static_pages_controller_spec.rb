@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PagesController do
+describe StaticPagesController do
   render_views
 
   before(:each) do

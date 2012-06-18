@@ -1,15 +1,15 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.5'
+gem 'rails', '3.2.6'
 gem 'will_paginate'
 gem 'bootstrap-sass'
 gem 'bcrypt-ruby'
 
-# Asset pipeline stuff for 3.2.5
+# Asset pipeline stuff for 3.2.5+
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
-  gem 'therubyracer'
+  gem 'therubyracer', :require => 'v8'
   gem 'execjs'
   gem 'uglifier'
 end
@@ -45,14 +45,11 @@ gem 'gravatar_image_tag'
 #   gem 'webrat'
 # end
 
-group :development do
-      gem 'rspec-rails'
-#     gem 'annotate-models'
-      gem 'faker'
-end
-
-group :test do
+group :development, :test do
       gem 'rspec'
+      gem 'rspec-rails'
+      gem 'capybara'
       gem 'webrat'
       gem 'factory_girl_rails'
+      gem 'faker'
 end

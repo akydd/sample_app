@@ -1,15 +1,3 @@
-# == Schema Information
-# Schema version: 20110303050223
-#
-# Table name: users
-#
-#  id         :integer         not null, primary key
-#  name       :string(255)
-#  email      :string(255)
-#  created_at :datetime
-#  updated_at :datetime
-#
-
 class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
   has_secure_password
@@ -34,11 +22,12 @@ class User < ActiveRecord::Base
                     :uniqueness => { :case_sensitive => false }
 
   # automatically created the virtual attribute password_confirmation
-  validates :password, :presence => true,
-                       :confirmation => true,
-                       :length => { :within => 6..40 }
+  validates :password, presence: true,
+                       length: { minimum: 6 }
+  validates :password_confirmation, presence: true
 
   before_save { |user| user.email = email.downcase }
+  before_save :create_remember_token
 
   def feed
     Micropost.from_users_followed_by(self)
@@ -56,4 +45,9 @@ class User < ActiveRecord::Base
     relationships.find_by_followed_id(followed).destroy
   end
 
+  private
+
+    def create_remember_token
+      self.remember_token = SecureRandom.urlsafe_base64
+    end
 end

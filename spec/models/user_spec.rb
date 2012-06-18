@@ -14,6 +14,7 @@ describe User do
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
+  it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
   it { should respond_to(:admin) }
 
@@ -60,6 +61,22 @@ describe User do
       user_with_duplicate_email.save
     end
     it { should_not be_valid }
+  end
+
+  describe "return val of autenticate method" do
+	  before { @user.save }
+	  let(:found_user) { User.find_by_email(@user.email) }
+
+	  describe "with valid password" do
+		  it { should == found_user.authenticate(@user.password) }
+	  end
+
+	  describe "with invalid password" do
+		  let(:user_for_invalid_password) { found_user.authenticate("invalid") }
+
+		  it { should_not == user_for_invalid_password }
+		  specify { user_for_invalid_password.should be_false }
+	  end
   end
 
   describe "relationships" do
@@ -184,9 +201,9 @@ describe User do
     it { should_not be_valid }
   end
 
-  describe "when password is too long" do
-    before { @user.password = @user.password_confirmation = "a" * 41 }
-    it { should_not be_valid } 
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
   end
 
 end
