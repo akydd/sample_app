@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "User Pages" do
-	subject { response }
+	subject { page }
 
 	describe "profile page" do
 		let(:user) { FactoryGirl.create(:user) }
@@ -22,8 +22,15 @@ describe "User Pages" do
 
 		describe "with invalid info" do
 			it "should not create a user" do
-				expect { click_button }.not_to change(User, :count)
+				expect { click_button "Sign up" }.not_to change(User, :count)
 			end
+		end
+
+		describe "after submission" do
+			before { click_button "Sign up" }
+
+			it { should have_selector('title', content: full_title("Sign up")) }
+			it { should have_content('error') }
 		end
 
 		describe "with valid info" do
@@ -35,7 +42,15 @@ describe "User Pages" do
 			end
 
 			it "should create a new user" do
-				expect { click_button }.to change(User, :count).by(1)
+				expect { click_button "Sign up" }.to change(User, :count).by(1)
+			end
+
+			describe "after saving the user" do
+				before { click_button "Sign up"}
+				let(:user) { User.find_by_email('user@example.com') }
+
+				it { should have_selector('title', text: user.name) }
+				it { should have_selector('div', text: "Welcome") }
 			end
 		end
 	end

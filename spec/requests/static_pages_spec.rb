@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Static Pages" do
 
-	subject { response }
+	subject { page }
 
 	describe "Home Page" do
 		before { visit root_path }

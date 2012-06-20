@@ -9,7 +9,7 @@ gem 'bcrypt-ruby'
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
-  gem 'therubyracer', :require => 'v8'
+  gem 'therubyracer', :platform => :ruby 
   gem 'execjs'
   gem 'uglifier'
 end
@@ -49,7 +49,6 @@ group :development, :test do
       gem 'rspec'
       gem 'rspec-rails'
       gem 'capybara'
-      gem 'webrat'
       gem 'factory_girl_rails'
       gem 'faker'
 end
