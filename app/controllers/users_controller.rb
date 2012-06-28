@@ -1,9 +1,11 @@
 class UsersController < ApplicationController
-  before_filter :authenticate, :except => [:show, :new, :create]
-  before_filter :correct_user, :only => [:edit, :update]
-  before_filter :admin_user, :only => :destroy
-  before_filter :not_for_authenticated_users, :only => [:new, :create]
-  before_filter :different_user, :only => :destroy
+  # Filters are applied in order of appearance!
+  #  before_filter :authenticate, :except => [:show, :new, :create]
+  before_filter :signed_in_user, only: [:edit, :update]
+  before_filter :correct_user, only: [:edit, :update]
+  #  before_filter :admin_user, :only => :destroy
+  #  before_filter :not_for_authenticated_users, :only => [:new, :create]
+  #  before_filter :different_user, :only => :destroy
 
   def index
     @title = "All users"
@@ -40,9 +42,9 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(params[:user])
       flash[:success] = "Profile updated."
+      sign_in @user
       redirect_to @user
     else
-      @title = "Edit user"
       render 'edit'
     end
   end
@@ -68,6 +70,13 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to signin_path, notice: "Please sign in."
+    end
+  end
 
   def admin_user
     redirect_to(root_path) unless current_user.admin?

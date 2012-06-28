@@ -17,10 +17,14 @@ module SessionsHelper
   #  redirect_to root_path, :notice => "You have no reason to access this page."
   #end
 
-  #def redirect_back_or(default)
-  #  redirect_to(session[:return_to] || default)
-  #  clear_return_to
-  #end
+  def redirect_back_or(default)
+    redirect_to(session[:return_to] || default)
+    session.delete(:return_to)
+  end
+
+  def store_location
+    session[:return_to] = request.fullpath
+  end
 
   def sign_in(user)
     cookies.permanent[:remember_token] = user.remember_token
