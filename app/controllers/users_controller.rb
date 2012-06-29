@@ -1,15 +1,15 @@
 class UsersController < ApplicationController
   # Filters are applied in order of appearance!
   #  before_filter :authenticate, :except => [:show, :new, :create]
-  before_filter :signed_in_user, only: [:edit, :update]
+  before_filter :signed_in_user, only: [:index, :edit, :update]
   before_filter :correct_user, only: [:edit, :update]
-  #  before_filter :admin_user, :only => :destroy
+  before_filter :admin_user, only: :destroy
   #  before_filter :not_for_authenticated_users, :only => [:new, :create]
   #  before_filter :different_user, :only => :destroy
 
   def index
     @title = "All users"
-    @users = User.paginate(:page => params[:page])
+    @users = User.paginate(page: params[:page])
   end
 
   def show

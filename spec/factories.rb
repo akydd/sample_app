@@ -1,18 +1,18 @@
 # User factory
 FactoryGirl.define do
   factory :user do
-    name "Stephen Harper"
-    email "pm@gov.ab.ca"
+    sequence(:name) { |n| "Person #{n}" }
+    sequence(:email) { |n| "person_#{n}@example.com" }
     password "foobar"
     password_confirmation "foobar"
+
+    factory :admin do
+      admin true
+    end
   end
 
   factory :micropost do
     content "Foo bar"
     association :user
-  end
-
-  sequence :email do |n|
-    "person-#{n}@example.com"
   end
 end

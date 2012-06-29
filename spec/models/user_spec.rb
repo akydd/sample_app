@@ -4,7 +4,7 @@ describe User do
 
   before(:each) do
     @user = User.new(name: "Example User", email: "user@example.com",
-		     password: "foobar", password_confirmation: "foobar")
+                     password: "foobar", password_confirmation: "foobar")
   end
 
   subject { @user }
@@ -19,6 +19,13 @@ describe User do
   it { should respond_to(:admin) }
 
   it { should be_valid }
+  it { should_not be_admin }
+
+  describe "with admin attribute set to 'true'" do
+    before { @user.toggle!(:admin) }
+
+    it { should be_admin }
+  end
 
   describe "when name is not present" do
     before  { @user.name = " " }
@@ -64,19 +71,19 @@ describe User do
   end
 
   describe "return val of autenticate method" do
-	  before { @user.save }
-	  let(:found_user) { User.find_by_email(@user.email) }
+    before { @user.save }
+    let(:found_user) { User.find_by_email(@user.email) }
 
-	  describe "with valid password" do
-		  it { should == found_user.authenticate(@user.password) }
-	  end
+    describe "with valid password" do
+      it { should == found_user.authenticate(@user.password) }
+    end
 
-	  describe "with invalid password" do
-		  let(:user_for_invalid_password) { found_user.authenticate("invalid") }
+    describe "with invalid password" do
+      let(:user_for_invalid_password) { found_user.authenticate("invalid") }
 
-		  it { should_not == user_for_invalid_password }
-		  specify { user_for_invalid_password.should be_false }
-	  end
+      it { should_not == user_for_invalid_password }
+      specify { user_for_invalid_password.should be_false }
+    end
   end
 
   describe "relationships" do
