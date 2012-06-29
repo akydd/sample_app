@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
   has_secure_password
 
-  has_many :microposts, :dependent => :destroy
+  has_many :microposts, dependent: :destroy
 
   has_many :relationships, :foreign_key => "follower_id",
                            :dependent => :destroy
@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   before_save :create_remember_token
 
   def feed
-    Micropost.from_users_followed_by(self)
+    Micropost.where("user_id = ?", id)
   end
 
   def following?(followed)

@@ -17,6 +17,7 @@ describe User do
   it { should respond_to(:remember_token) }
   it { should respond_to(:authenticate) }
   it { should respond_to(:admin) }
+  it { should respond_to(:microposts) }
 
   it { should be_valid }
   it { should_not be_admin }
@@ -86,110 +87,36 @@ describe User do
     end
   end
 
-  describe "relationships" do
-
-    before(:each) do
-      @user.save
-      @followed = FactoryGirl.create(:user)
-    end
-
-    it "should have a relationship method" do
-      @user.should respond_to(:relationships)
-    end
-
-    it "should have a following method" do
-      @user.should respond_to(:following)
-    end
-
-    it "should have a following? method" do
-      @user.should respond_to(:following?)
-    end
-
-    it "should have a follow! method" do
-      @user.should respond_to(:follow!)
-    end
-
-    it "should follow another user" do
-      @user.follow!(@followed)
-      @user.should be_following(@followed)
-    end
-
-    it "should include the followed user in the following array" do
-      @user.follow!(@followed)
-      @user.following.should include(@followed)
-    end
-
-    it "should have an unfollow! method" do
-      @user.should respond_to(:unfollow!)
-    end
-
-    it "should unfollow a user" do
-      @user.follow!(@followed)
-      @user.unfollow!(@followed)
-      @user.should_not be_following(@followed)
-    end
-
-    it "should have a reverse_relationships method" do
-      @user.should respond_to(:reverse_relationships)
-    end
-
-    it "should have a followers method" do
-      @user.should respond_to(:followers)
-    end
-
-    it "should include the follower in the followers array" do
-      @user.follow!(@followed)
-      @followed.followers.should include(@user)
-    end
-
-  end
-
   describe "micropost associations" do
-
-    before(:each) do
-      @user.save
-      @mp1 = FactoryGirl.create(:micropost, :user => @user, :created_at => 1.day.ago)
-      @mp2 = FactoryGirl.create(:micropost, :user => @user, :created_at => 1.hour.ago)
+  
+    before { @user.save }
+    let!(:older_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
+    end
+    let!(:newer_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at, 1.hour.ago)
     end
 
-    it "should have a micropost attribute" do
-      @user.should respond_to(:microposts)
-    end
-
-    it "should have the right microposts in the right order" do
-      @user.microposts.should == [@mp2, @mp1]
+    it "should ahve the right micriposts in the right order" do
+      @user.microposts.should == [newer_micropost, older_micropost]
     end
 
     it "should destroy associated microposts" do
+      microposts = @user.microposts
       @user.destroy
-      [@mp1, @mp2].each do |post|
-        Micropost.find_by_id(post.id).should be_nil
+      microposts.each do |micropost|
+        Micropost.find_by_id(micropost.id).should be_nil
       end
     end
 
-    describe "status feed" do
-
-      it "should have a feed" do
-        @user.should respond_to(:feed)
+    describe "status" do
+      let(:unfollowed_post) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
       end
 
-      it "should include the user's microposts" do
-        @user.feed.include?(@mp1).should be_true
-        @user.feed.include?(@mp2).should be_true
-      end
-
-      it "should not include a different user's microposts" do
-        mp3 = FactoryGirl.create(:micropost, :user => FactoryGirl.create(:user, :email => FactoryGirl.generate(:email)))
-        @user.feed.include?(mp3).should be_false
-      end
-
-      it "should include the microposts of followed users" do
-        followed = FactoryGirl.create(:user, :email => FactoryGirl.generate(:email))
-        mp3 = FactoryGirl.create(:micropost, :user => followed)
-        @user.follow!(followed)
-        @user.feed.should include(mp3)
-      end
-
+      its(:feed) { should include(newer_micropost) }
+      its(:feed) { should include(older_micropost) }
+      its(:feed) { should_not include(unfollowed_post) }
     end
   end
 

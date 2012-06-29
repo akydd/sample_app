@@ -1,73 +1,39 @@
 require 'spec_helper'
 
 describe Micropost do
-  before(:each) do
-    @user = FactoryGirl.create(:user)
-    @attr = { :content => "Value for content" }
+
+  let(:user) { FactoryGirl.create(:user) }
+  before { @micropost = user.microposts.build(content: "Lorem ipsum") }
+
+  subject { @micropost }
+
+  it { should respond_to(:content) }
+  it { should respond_to(:user_id) }
+  it { should respond_to(:user) }
+  its(:user) { should == user }
+
+  it { should be_valid }
+
+  describe "when user_id is not present" do
+    before { @micropost.user_id = nil }
+    it { should_not be_valid }
   end
 
-  it "should create a new instance given valid attributes" do
-    @user.microposts.create!(@attr)
+  describe "with blank content" do
+    before { @micropost.content = " " }
+    it { should_not be_valid }
   end
 
-  describe "from_users_followed_by" do
-
-    before(:each) do
-      @other_user = FactoryGirl.create(:user, :email => FactoryGirl.generate(:email))
-      @third_user = FactoryGirl.create(:user, :email => FactoryGirl.generate(:email))
-
-      @user_post = @user.microposts.create!(:content => "user post")
-      @other_post = @other_user.microposts.create!(:content => "other user post")
-      @third_post = @third_user.microposts.create!(:content => "third user post")
-
-      @user.follow!(@other_user)
-    end
-
-    it "should have a from_users_followed_by class method" do
-      Micropost.should respond_to(:from_users_followed_by)
-    end
-
-    it "should include the followed user's posts" do
-      Micropost.from_users_followed_by(@user).should include(@other_post)
-    end
-
-    it "should include the user's own posts" do
-      Micropost.from_users_followed_by(@user).should include(@user_post)
-    end
-
-    it "should not include an unfollowed user's posts" do
-      Micropost.from_users_followed_by(@user).should_not include(@third_post)
-    end
-
+  describe "with content that is too long" do
+    before { @micropost.content = "a" * 141 }
+    it { should_not be_valid }
   end
 
-  describe "validations" do
-
-    it "should require a user id" do
-      Micropost.new(@attr).should_not be_valid
-    end
-
-    it "should require non-blank content" do
-      @user.microposts.build(:content => " ").should_not be_valid
-    end
-
-    it "should reject long content" do
-      @user.microposts.build(:content => "a"*141).should_not be_valid
-    end
-  end
-
-  describe "user association" do
-    before(:each) do
-      @micropost = @user.microposts.create(@attr)
-    end
-
-    it "should have a user attribute" do
-      @micropost.should respond_to(:user)
-    end
-
-    it "should have the right associated user" do
-      @micropost.user_id.should == @user.id
-      @micropost.user.should == @user
+  describe "accessible attributes" do
+    it "should not allow access to user_id" do
+      expect do
+        Micropost.new(user_id: user.id)
+      end.should raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
   end
 end

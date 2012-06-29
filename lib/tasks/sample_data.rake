@@ -29,9 +29,9 @@ def make_users
 end
 
 def make_microposts
-  User.all(:limit => 6).each do |user|
+  User.all(limit: 6).each do |user|
     50.times do
-      user.microposts.create!(:content => Faker::Lorem.sentence(5))
+      user.microposts.create!(content: Faker::Lorem.sentence(5))
     end
   end
 end

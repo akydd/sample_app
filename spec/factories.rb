@@ -12,7 +12,7 @@ FactoryGirl.define do
   end
 
   factory :micropost do
-    content "Foo bar"
-    association :user
+    content "Lorem ipsum"
+    user
   end
 end

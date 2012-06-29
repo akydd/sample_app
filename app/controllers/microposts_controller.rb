@@ -1,6 +1,8 @@
 class MicropostsController < ApplicationController
-  before_filter :authenticate
-  before_filter :authorized_user, :only => :destroy
+#  before_filter :authenticate
+#  before_filter :authorized_user, :only => :destroy
+  before_filter :signed_in_user, only: [:create, :destroy]
+  before_filter :current_user, only: :destroy
 
   def index
     @user = User.find(params[:user_id])
@@ -14,7 +16,7 @@ class MicropostsController < ApplicationController
       redirect_to root_path
     else
       @feed_items = []
-      render 'pages/home'
+      render 'static_pages/home'
     end
   end
 
@@ -30,4 +32,8 @@ class MicropostsController < ApplicationController
     redirect_to root_path unless current_user?(@micropost.user)
   end
 
+  def correct_user
+    @micropost = current_user.microposts.find_by_id(params[:id])
+    redirect_to root_path if @micropost.nil?
+  end
 end
