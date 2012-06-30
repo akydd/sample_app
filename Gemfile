@@ -4,6 +4,8 @@ gem 'rails', '3.2.6'
 gem 'will_paginate'
 gem 'bootstrap-sass'
 gem 'bcrypt-ruby'
+gem 'faker'
+gem 'bootstrap-will_paginate'
 
 # Asset pipeline stuff for 3.2.5+
 group :assets do
@@ -50,7 +52,6 @@ group :development, :test do
       gem 'rspec-rails'
       gem 'capybara'
       gem 'factory_girl_rails'
-      gem 'faker'
       gem 'cucumber-rails'
       gem 'database_cleaner'
 end

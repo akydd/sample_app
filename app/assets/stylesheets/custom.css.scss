@@ -1,7 +1,7 @@
 @import "bootstrap";
 
 /* mininx, vars, etc. */
-$grayMediumList: #eaeaea;
+$grayMediumLight: #eaeaea;
 
 @mixin box_sizing {
 	-moz-box-sizing: border-box;
@@ -54,7 +54,7 @@ h2 {
 	margin-bottom: 30px;
 	text-align: center;
 	font-width: normal;
-	color: #999;
+	color: $grayLight;
 }
 
 p {
@@ -75,7 +75,7 @@ p {
 	font-weight: bold;
 	line-height: 1;
 	&:hover {
-		color: #fff;
+		color: white;
 		text-decoration: none;
 	}
 }
@@ -86,12 +86,12 @@ p {
 footer {
 	margin-top: 45px;
 	padding-top: 5px;
-	border-top: 1px solid #eaeaea;
-	color: #999;
+	border-top: 1px solid $grayMediumLight;
+	color: $grayLight;
 	a {
-		color: #555;
+		color: $gray;
 		&:hover {
-			color: #22;
+			color: $grayDarker;
 		}
 	}
 	small {
@@ -169,3 +169,19 @@ input, textarea, select, .uneditable-input {
 	@extend .control-group;
 	@extend .error;
 }
+
+/* users index */
+
+.users {
+	list-style: none;
+	margin: 0;
+	li {
+		overflow: auto;
+		padding: 10px 0;
+		border-top: 1px solid $grayLighter;
+		&:last-child {
+			border-bottom: 1px solid $grayLighter;
+		}
+	}
+}
+
