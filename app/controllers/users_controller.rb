@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   # Filters are applied in order of appearance!
-  #  before_filter :authenticate, :except => [:show, :new, :create]
   before_filter :signed_in_user, only: [:index, :edit, :update]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
@@ -15,12 +14,10 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @microposts = @user.microposts.paginate(page: params[:page])
-    @title = @user.name
   end
 
   def new
     @user = User.new
-    @title = "Sign up"
   end
 
   def create
@@ -30,7 +27,6 @@ class UsersController < ApplicationController
       flash[:success] = "Welcome to the Sample App!"
       redirect_to @user
     else
-      @title = "Sign up"
       render 'new'
     end
   end
