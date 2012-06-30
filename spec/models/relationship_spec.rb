@@ -2,51 +2,36 @@ require 'spec_helper'
 
 describe Relationship do
 
-  before(:each) do
-    @follower = FactoryGirl.create(:user)
-    @followed = FactoryGirl.create(:user, :email => FactoryGirl.generate(:email))
+  let(:follower) { FactoryGirl.create(:user) }
+  let(:followed) { FactoryGirl.create(:user) }
+  let(:relationship) { follower.relationships.build(followed_id: followed.id) }
 
-    @relationship = @follower.relationships.build(:followed_id => @followed.id)
-  end
+  subject { relationship }
 
-  it "should create a new instance given valid attributes" do
-    @relationship.save!
-  end
+  it { should be_valid }
 
-  describe "follow methods" do
-
-    before(:each) do
-      @relationship.save
-    end
-
-    it "should have a follower attribute" do
-      @relationship.should respond_to(:follower)
-    end
-
-    it "should have the right follower" do
-      @relationship.follower.should == @follower
-    end
-
-    it "should have a followed attribute" do
-      @relationship.should respond_to(:followed)
-    end
-
-    it "should have the right followed user" do
-      @relationship.followed.should == @followed
+  describe "accessible attributes" do
+    it "should not allow access to follower_id" do
+      expect do
+        Relationship.new(follower_id: follwer.id)
+      end.should raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
   end
 
-  describe "validations" do
-
-    it "should require a follower_id" do
-      @relationship.follower_id = nil
-      @relationship.should_not be_valid
-    end
-
-    it "should require a followed_id" do
-      @relationship.followed_id = nil
-      @relationship.should_not be_valid
-    end
+  describe "follower methods" do
+    it { should respond_to(:follower) }
+    it { should respond_to(:followed) }
+    its(:follower) { should == follower }
+    its(:followed) { should == followed }
   end
 
+  describe "when followed id is not present" do
+    before { relationship.followed_id = nil }
+    it { should_not be_valid }
+  end
+
+  describe "when follower id is not present" do
+    before { relationship.follower_id = nil }
+    it { should_not be_valid }
+  end
 end

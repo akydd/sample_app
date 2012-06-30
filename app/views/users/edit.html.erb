@@ -2,13 +2,13 @@
 <h1>Update your profile</h1>
 
 <div class="row">
-	<div class="span6 offest3">
-		<%= form_for(@user) do |f| %>
-			<%= render 'fields', :f => f %>
-			<%= f.submit "Update", class: "btn btn-large btn-primary" %>
-		<% end %>
+  <div class="span6 offest3">
+    <%= form_for(@user) do |f| %>
+      <%= render 'fields', :f => f %>
+      <%= f.submit "Update", class: "btn btn-large btn-primary" %>
+    <% end %>
 
-		<%= gravatar_for @user %>
-		<a href="http://gravatar.com/emails">change</a>
-	</div>
+    <%= gravatar_for @user %>
+    <a href="http://gravatar.com/emails">change</a>
+  </div>
 </div>
