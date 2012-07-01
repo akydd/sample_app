@@ -2,62 +2,39 @@ require 'spec_helper'
 
 describe RelationshipsController do
 
-  describe "access control" do
+  let(:user) { FactoryGirl.create(:user) }
+  let(:other_user) { FactoryGirl.create(:user) }
 
-    it "should require signin for create" do
-      post :create
-      response.should redirect_to(signin_path)
-    end
+  before { sign_in user }
 
-    it "should require signin for destroy" do
-      delete :destroy, :id => 1
-      response.should redirect_to(signin_path)
-    end
-  end
+  describe "creating a relationship with Ajax" do
 
-  describe "POST 'create'" do
-
-    before(:each) do
-      @user = test_sign_in(FactoryGirl.create(:user))
-      @followed = FactoryGirl.create(:user, :email => FactoryGirl.generate(:email))
-    end
-
-    it "should create a relationship" do
-      lambda do
-        post :create, :relationship => { :followed_id => @followed }
-        response.should be_redirect
+    it "should increment the Relationship count" do
+      expect do
+        xhr :post, :create, relationship: { followed_id: other_user.id }
       end.should change(Relationship, :count).by(1)
     end
 
-    it "should create a relationship using Ajax" do
-      lambda do
-        xhr :post, :create, :relationship => { :followed_id => @followed }
-        response.should be_success
-      end.should change(Relationship, :count).by(1)
+    it "should respond with success" do
+      xhr :post, :create, relationship: { followed_id: other_user.id }
+      response.should be_success
     end
   end
 
-  describe "DELETE 'destroy'" do
+  describe "destroying a relationship with Ajax" do
 
-    before(:each) do
-      @user = test_sign_in(FactoryGirl.create(:user))
-      @followed = FactoryGirl.create(:user, :email => FactoryGirl.generate(:email))
-      @user.follow!(@followed)
-      @relationship = @user.relationships.find_by_followed_id(@followed)
-    end
+    before { user.follow!(other_user) }
+    let(:relationship) { user.relationships.find_by_followed_id(other_user) }
 
-    it "should destroy a relationship" do
-      lambda do
-        delete :destroy, :id => @relationship
-        response.should be_redirect
+    it "should decrement the Relationship count" do
+      expect do
+        xhr :delete, :destroy, id: relationship.id
       end.should change(Relationship, :count).by(-1)
     end
 
-    it "should destroy a relationship using Ajax" do
-      lambda do
-        xhr :delete, :destroy, :id => @relationship
-        response.should be_success
-      end.should change(Relationship, :count).by(-1)
+    it "should respond with success" do
+      xhr :delete, :destroy, id: relationship.id
+      response.should be_success
     end
   end
 end
