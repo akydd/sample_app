@@ -95,7 +95,17 @@ describe User do
   describe "when duplicate (up to case) email is taken" do
     before do
       user_with_duplicate_email = @user.dup
+      user_with_duplicate_email.name = "New Name"
       user_with_duplicate_email.save
+    end
+    it { should_not be_valid }
+  end
+
+  describe "when duplicate (up to case) user name is taken" do
+    before do
+      user_with_duplicate_name = @user.dup
+      user_with_duplicate_name.email = "new@email.com"
+      user_with_duplicate_name.save
     end
     it { should_not be_valid }
   end
