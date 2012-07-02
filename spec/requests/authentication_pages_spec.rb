@@ -54,7 +54,7 @@ describe "Authentication" do
         end
 
         describe "submitting to the destroy action" do
-          before { delete relationships_path(1) }
+          before { delete relationship_path(1) }
           specify { response.should redirect_to(signin_path) }
         end
       end
@@ -114,6 +114,21 @@ describe "Authentication" do
         describe "visiting the followers page" do
           before { visit followers_user_path(user) }
           it { should have_selector('title', text: 'Sign in') }
+        end
+
+        describe "after signing in" do
+
+          before { sign_in user }
+
+          describe "create a new user" do
+            before { post users_path }
+            specify { response.should redirect_to(root_path) }
+          end
+
+          describe "page to make a new user" do
+            before { get new_user_path }
+            specify { response.should redirect_to(root_path) }
+          end
         end
       end
     end

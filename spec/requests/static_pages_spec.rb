@@ -4,9 +4,16 @@ describe "Static Pages" do
 
   subject { page }
 
+  shared_examples_for "all static pages" do
+    it { should have_selector('tite',  text: fill_title(page_title)) }
+    it { should have_selector('h1', text: heading) }
+  end
+
   describe "Home Page" do
     before { visit root_path }
-    it { should have_selector('title', content: full_title('')) }
+    let(:page_title) { '' }
+    let(:heading) { 'Sample App' }
+    it { should_not have_selector('title', text: 'Home') }
 
     describe "for signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
@@ -38,16 +45,33 @@ describe "Static Pages" do
 
   describe "Help Page" do
     before { visit help_path }
-    it { should have_selector('title', content: full_title('Help')) }
+    let(:page_title) { 'Help' }
+    let(:heading) { 'Help' }
   end
 
   describe "About page" do
     before { visit about_path }
-    it { should have_selector('title', content: full_title('About')) }
+    let(:page_title) { 'About' }
+    let(:heading) { 'About ' }
   end
 
   describe "Contact page" do
     before { visit contact_path }
-    it { should have_selector('title', :content => full_title('Contact')) }
+    let(:page_title) { 'Contact' }
+    let(:heading) { 'Contact' }
+  end
+
+  it "should have the correct links" do
+    visit root_path
+    click_link 'About'
+    page.should have_selector('title', text: 'About')
+    click_link 'Help'
+    page.should have_selector('title', text: 'Help')
+    click_link 'Contact'
+    page.should have_selector('title', text: 'Contact')
+    click_link 'Home'
+    page.should have_selector('h1', text: 'Sample App')
+    click_link 'Sign in'
+    page.should have_selector('title', text: 'Sign in')
   end
 end

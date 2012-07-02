@@ -4,19 +4,6 @@ module SessionsHelper
     user == current_user
   end
 
-  #def authenticate
-  #  deny_access unless signed_in?
-  #end
-
-  #def deny_access
-  #  store_location
-  #  redirect_to signin_path, :notice => "Please sign in to access this page."
-  #end
-
-  #def go_to_root
-  #  redirect_to root_path, :notice => "You have no reason to access this page."
-  #end
-
   def redirect_back_or(default)
     redirect_to(session[:return_to] || default)
     session.delete(:return_to)

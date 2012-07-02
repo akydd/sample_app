@@ -3,8 +3,8 @@ class UsersController < ApplicationController
   before_filter :signed_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
-  #  before_filter :not_for_authenticated_users, :only => [:new, :create]
-  #  before_filter :different_user, :only => :destroy
+  before_filter :admin_cannot_delete_self, only: :destroy
+  before_filter :not_for_authenticated_users, :only => [:new, :create]
 
   def index
     @title = "All users"
@@ -71,7 +71,9 @@ class UsersController < ApplicationController
   end
 
   def not_for_authenticated_users
-    go_to_root if signed_in?
+    if signed_in?
+      redirect_to root_path
+    end
   end
 
   def correct_user
@@ -79,10 +81,11 @@ class UsersController < ApplicationController
     redirect_to(root_path) unless current_user?(@user)
   end
 
-  def different_user
+  def admin_cannot_delete_self
     @user = User.find(params[:id])
-    if current_user?(@user)
-      redirect_to users_path, :notice => "You cannot delete yourself!"
+    if @user.admin? and current_user?(@user)
+      redirect_to users_path, notice: "Admin user cannot delete self!"
     end
   end
+
 end

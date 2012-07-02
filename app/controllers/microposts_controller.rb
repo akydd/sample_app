@@ -1,6 +1,4 @@
 class MicropostsController < ApplicationController
-#  before_filter :authenticate
-#  before_filter :authorized_user, :only => :destroy
   before_filter :signed_in_user, only: [:create, :destroy]
   before_filter :current_user, only: :destroy
 
@@ -21,16 +19,12 @@ class MicropostsController < ApplicationController
   end
 
   def destroy
+    @micropost = Micropost.find(params[:id])
     @micropost.destroy
     redirect_to root_path
   end
 
   private
-
-  def authorized_user
-    @micropost = Micropost.find(params[:id])
-    redirect_to root_path unless current_user?(@micropost.user)
-  end
 
   def correct_user
     @micropost = current_user.microposts.find_by_id(params[:id])
