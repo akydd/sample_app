@@ -7,7 +7,6 @@ class UsersController < ApplicationController
   before_filter :not_for_authenticated_users, :only => [:new, :create]
 
   def index
-    @title = "All users"
     @users = User.paginate(page: params[:page])
   end
 
