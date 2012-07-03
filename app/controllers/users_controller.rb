@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   before_filter :not_for_authenticated_users, :only => [:new, :create]
 
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.search(params[:search], params[:page])
   end
 
   def show

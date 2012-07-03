@@ -32,6 +32,15 @@ class User < ActiveRecord::Base
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token
 
+  default_scope order: :name
+
+  # method to search all Users by name.
+  # uses method 'paginate', which applies finder options
+  # (github.com/mislav/will_paginate/blob/master/lib/will_paginate/active_record.rb)
+  def self.search(name, page)
+    paginate page: page, conditions: ['name like ?', "%#{name}%"]
+  end
+
   def feed
     Micropost.from_users_followed_by(self)
   end

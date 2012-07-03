@@ -31,6 +31,37 @@ describe "User Pages" do
     end
   end
 
+  describe "user search" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:maul) { FactoryGirl.create(:user, name: 'Darth Maul') }
+    let(:vader) { FactoryGirl.create(:user, name: 'Darth Vader') }
+
+    before do
+      sign_in user
+      visit users_path
+    end
+
+    describe "returns only matching users, single result" do
+      before do
+        fill_in 'search', with: 'Maul'
+        click_button 'Search'
+      end
+
+      it { should have_link(maul.name, href: user_path(maul)) }
+      it { should_not have_link(vader.name, href: user_path(vader)) }
+    end
+
+    describe "returns only matching users, multiple result" do
+      before do
+        fill_in 'search', with: 'Darth'
+        click_button 'Search'
+      end
+
+      it { should have_link(maul.name, href: user_path(maul)) }
+      it { should have_link(vader.name, href: user_path(vader)) }
+    end
+  end
+
   describe "index" do
 
     let(:user) { FactoryGirl.create(:user) }
@@ -44,7 +75,7 @@ describe "User Pages" do
 
     it { should have_selector('title', text: 'Users') }
     it { should have_selector('h1', text: 'Users') }
-    # check for search form
+    # check for search form.  Search tests are above.
     it { should have_selector('input') }
 
     describe "pagination" do
@@ -83,7 +114,6 @@ describe "User Pages" do
         it "can delete other admin users" do
           expect { delete user_path(other_admin) }.to change(User, :count).by(-1)
         end
-
       end
     end
   end
