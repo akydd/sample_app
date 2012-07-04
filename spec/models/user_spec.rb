@@ -127,7 +127,7 @@ describe User do
   end
 
   describe "micropost associations" do
-  
+
     before { @user.save }
     let!(:older_micropost) do
       FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
@@ -197,6 +197,19 @@ describe User do
       @user.email = mixed_case_email
       @user.save
       @user.reload.email.should == mixed_case_email.downcase
+    end
+  end
+
+  describe "default sort order" do
+
+    # use let! here so that FactoryGirl is 'forced' to save objs in db
+    let!(:anakin) { FactoryGirl.create(:user, name: "Anakin Skywalker") }
+    let!(:yoda) { FactoryGirl.create(:user, name: "Yoda") }
+    let!(:maul) { FactoryGirl.create(:user, name: "Darth Maul") }
+    let!(:vader) { FactoryGirl.create(:user, name: "Darth Vader") }
+
+    it "should be alphabetically by name" do
+      User.all.should == [anakin, maul, vader, yoda]
     end
   end
 end
