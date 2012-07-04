@@ -5,6 +5,6 @@ This ia the sample application for
 by [Michael Hartl](http://michaelhartl.com/).
 
 The sample app has the following modifications:
-* User has 'username' attribute
+* User has 'username' attribute, which is non-editable after signing up
 * User index page has a search form to search all Users by username
 * Signin is by username and password
