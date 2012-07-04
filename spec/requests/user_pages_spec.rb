@@ -33,10 +33,11 @@ describe "User Pages" do
 
   describe "user search" do
     let(:user) { FactoryGirl.create(:user) }
-    let(:maul) { FactoryGirl.create(:user, name: 'Darth Maul') }
-    let(:vader) { FactoryGirl.create(:user, name: 'Darth Vader') }
+    # use let! below so FactoryGirl saves users immediately
+    let!(:maul) { FactoryGirl.create(:user, name: 'Darth Maul') }
+    let!(:vader) { FactoryGirl.create(:user, name: 'Darth Vader') }
 
-    before do
+    before(:each) do
       sign_in user
       visit users_path
     end
