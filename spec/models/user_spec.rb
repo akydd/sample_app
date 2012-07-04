@@ -3,13 +3,15 @@ require 'spec_helper'
 describe User do
 
   before(:each) do
-    @user = User.new(name: "Example User", email: "user@example.com",
+    @user = User.new(username: "exampleuser", name: "Example User",
+                     email: "user@example.com",
                      password: "foobar", password_confirmation: "foobar")
   end
 
   subject { @user }
 
   it { should respond_to(:name) }
+  it { should respond_to(:username) }
   it { should respond_to(:email) }
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
@@ -57,6 +59,11 @@ describe User do
     it { should be_admin }
   end
 
+  describe "when username is not present" do
+    before { @user.username = " " }
+    it { should_not be_valid }
+  end
+
   describe "when name is not present" do
     before  { @user.name = " " }
     it { should_not be_valid }
@@ -64,6 +71,11 @@ describe User do
 
   describe "when email address is not present" do
     before { @user.email = " " }
+    it { should_not be_valid }
+  end
+
+  describe "when username is too long" do
+    before { @user.username = "a" * 16 }
     it { should_not be_valid }
   end
 
@@ -92,19 +104,41 @@ describe User do
     end
   end
 
-  describe "when duplicate (up to case) email is taken" do
+  describe "when username is valid" do
+    it "should be valid" do
+      usernames = %w[goodName _the_user_ HEYDUDE smallcaps 1234]
+      usernames.each do |valid_username|
+        @user.username = valid_username
+        @user.should be_valid
+      end
+    end
+  end
+
+  describe "when username is invalid" do
+    it "should not be valid" do
+      usernames = [ '', ' ', '!#$^', 'm!x3d73tter$' ]
+      usernames.each do |invalid_username|
+        @user.username = invalid_username
+        @user.should_not be_valid
+      end
+    end
+  end
+
+  describe "when duplicate (up to case) username is taken" do
     before do
       user_with_duplicate_email = @user.dup
-      user_with_duplicate_email.name = "New Name"
+      # avoid duplicate email validation error
+      user_with_duplicate_email.email = "new@email.com"
       user_with_duplicate_email.save
     end
     it { should_not be_valid }
   end
 
-  describe "when duplicate (up to case) user name is taken" do
+  describe "when duplicate (up to case) email is taken" do
     before do
       user_with_duplicate_name = @user.dup
-      user_with_duplicate_name.email = "new@email.com"
+      # avoid duplicate username validation
+      user_with_duplicate_name.username = "AnotherName"
       user_with_duplicate_name.save
     end
     it { should_not be_valid }
@@ -203,12 +237,12 @@ describe User do
   describe "default sort order" do
 
     # use let! here so that FactoryGirl is 'forced' to save objs in db
-    let!(:anakin) { FactoryGirl.create(:user, name: "Anakin Skywalker") }
-    let!(:yoda) { FactoryGirl.create(:user, name: "Yoda") }
-    let!(:maul) { FactoryGirl.create(:user, name: "Darth Maul") }
-    let!(:vader) { FactoryGirl.create(:user, name: "Darth Vader") }
+    let!(:anakin) { FactoryGirl.create(:user, username: "AnakinSkywalker") }
+    let!(:yoda) { FactoryGirl.create(:user, username: "Yoda") }
+    let!(:maul) { FactoryGirl.create(:user, username: "DarthMaul") }
+    let!(:vader) { FactoryGirl.create(:user, username: "DarthVader") }
 
-    it "should be alphabetically by name" do
+    it "should be alphabetically by username" do
       User.all.should == [anakin, maul, vader, yoda]
     end
   end

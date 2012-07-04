@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   # note :admin is excluded, so malicatious user cannot send a PUT
   # requset to make arbitraty users admins.
-  attr_accessible :name, :email, :password, :password_confirmation
+  attr_accessible :name, :username, :email, :password, :password_confirmation
   has_secure_password
 
   has_many :microposts, dependent: :destroy
@@ -15,9 +15,14 @@ class User < ActiveRecord::Base
   has_many :followers, through: :reverse_relationships, source: :follower
 
   VALID_EMAIL_REGEX =/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  VALID_USERNAME_REGEX = /\A\w+\z/
 
   validates :name,  presence: true,
-    length: { maximum: 50 },
+    length: { maximum: 50 }
+
+  validates :username, presence: true,
+    format:  { with: VALID_USERNAME_REGEX },
+    length: { maximum: 15 },
     uniqueness: { case_sensitive: true }
 
   validates :email, presence:   true,
@@ -32,13 +37,13 @@ class User < ActiveRecord::Base
   before_save { |user| user.email = email.downcase }
   before_save :create_remember_token
 
-  default_scope order: :name
+  default_scope order: :username
 
-  # method to search all Users by name.
+  # method to search all Users by username.
   # uses method 'paginate', which applies finder options
   # (github.com/mislav/will_paginate/blob/master/lib/will_paginate/active_record.rb)
-  def self.search(name, page)
-    paginate page: page, conditions: ['name like ?', "%#{name}%"]
+  def self.search(username, page)
+    paginate page: page, conditions: ['username like ?', "%#{username}%"]
   end
 
   def feed

@@ -10,12 +10,14 @@ end
 
 def make_users
   admin = User.create!(name: "Admin One",
+                       username: "admin1",
                        email: "admin1@test.com",
                        password: "password",
                        password_confirmation: "password")
   admin.toggle!(:admin)
 
   other_admin = User.create(name: "Admin Two",
+                            username: "admin2",
                             email: "admin2@test.com",
                             password: "password",
                             password_confirmation: "password")
@@ -23,9 +25,13 @@ def make_users
 
   99.times do |n|
     name = Faker::Name.name
-    email = "example-#{n+1}@railstutorial.org"
+    # Faker::Internet's user_name used ".", so we just take the existing name
+    # and replace all non word chars with "_", then trunc to 15 chars.
+    username = name.gsub(/\W/, "_")[0, 15]
+    email = Faker::Internet.email(name)
     password = "password"
     User.create!(name: name,
+                 username: username,
                  email: email,
                  password: password,
                  password_confirmation: password)

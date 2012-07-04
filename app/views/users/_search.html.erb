@@ -1,7 +1,7 @@
 <div class="row">
   <div class ="span6 offset3">
     <%= form_tag users_path, method: 'get' do %>
-      <%= text-field_tag :search, params[:search], placeholder: "Search Users"%>
+      <%= text_field_tag :search, params[:search], placeholder: "Search by username"%>
       <%= submit_tag "Search", class: "btn btn-small btn-primary", name: nil %>
     <% end %>
   </div>

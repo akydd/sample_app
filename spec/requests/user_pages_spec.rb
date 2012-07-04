@@ -16,7 +16,7 @@ describe "User Pages" do
 
       it { should have_selector('title', text: full_title('Following')) }
       it { should have_selector('h3', text: 'Following') }
-      it { should have_link(other_user.name, href: user_path(other_user)) }
+      it { should have_link(other_user.username, href: user_path(other_user)) }
     end
 
     describe "followers" do
@@ -27,15 +27,15 @@ describe "User Pages" do
 
       it { should have_selector('title', text: full_title('Followers')) }
       it { should have_selector('h3', text: 'Followers') }
-      it { should have_link(user.name, href: user_path(user)) }
+      it { should have_link(user.username, href: user_path(user)) }
     end
   end
 
   describe "user search" do
     let(:user) { FactoryGirl.create(:user) }
     # use let! below so FactoryGirl saves users immediately
-    let!(:maul) { FactoryGirl.create(:user, name: 'Darth Maul') }
-    let!(:vader) { FactoryGirl.create(:user, name: 'Darth Vader') }
+    let!(:maul) { FactoryGirl.create(:user, username: 'DarthMaul') }
+    let!(:vader) { FactoryGirl.create(:user, username: 'DarthVader') }
 
     before(:each) do
       sign_in user
@@ -48,8 +48,8 @@ describe "User Pages" do
         click_button 'Search'
       end
 
-      it { should have_link(maul.name, href: user_path(maul)) }
-      it { should_not have_link(vader.name, href: user_path(vader)) }
+      it { should have_link(maul.username, href: user_path(maul)) }
+      it { should_not have_link(vader.username, href: user_path(vader)) }
     end
 
     describe "returns only matching users, multiple result" do
@@ -58,8 +58,8 @@ describe "User Pages" do
         click_button 'Search'
       end
 
-      it { should have_link(maul.name, href: user_path(maul)) }
-      it { should have_link(vader.name, href: user_path(vader)) }
+      it { should have_link(maul.username, href: user_path(maul)) }
+      it { should have_link(vader.username, href: user_path(vader)) }
     end
   end
 
@@ -85,7 +85,7 @@ describe "User Pages" do
 
       it "should list all users" do
         User.paginate(page: 1).each do |user|
-          page.should have_selector('li', text: user.name)
+          page.should have_selector('li', text: user.username)
         end
       end
     end
@@ -126,7 +126,9 @@ describe "User Pages" do
 
     before { visit user_path(user) }
 
-    it { should have_selector('title', content: user.name) }
+    it { should have_selector('title', text: user.username) }
+    it { should have_selector('h1', text: user.username) }
+    it { should have_selector('h4', text: user.name) }
 
     describe "microposts" do
       it { should have_content(m1.content) }
@@ -211,6 +213,7 @@ describe "User Pages" do
     describe "with valid info" do
       before do
         fill_in "Name", with: "Example User"
+        fill_in "Username", with: "exampleuser"
         fill_in "Email", with: "user@example.com"
         fill_in "Password", with: "foobar"
         fill_in "Confirmation", with: "foobar"
@@ -224,7 +227,7 @@ describe "User Pages" do
         before { click_button "Sign up"}
         let(:user) { User.find_by_email('user@example.com') }
 
-        it { should have_selector('title', text: user.name) }
+        it { should have_selector('title', text: user.username) }
         it { should have_selector('div', text: "Welcome") }
       end
     end
@@ -240,8 +243,10 @@ describe "User Pages" do
     describe "with valid info" do
       let(:new_name) { "New Name" }
       let(:new_email) { "new@example.com" }
+      let(:new_username) { "newexample" }
 
       before do
+        fill_in "Username", with: new_username
         fill_in "Name", with: new_name
         fill_in "Email", with: new_email
         fill_in "Password", with: user.password
@@ -249,11 +254,12 @@ describe "User Pages" do
         click_button "Update"
       end
 
-      it { should have_selector('title', text: new_name) }
+      it { should have_selector('title', text: new_username) }
       it { should have_selector('div', text: 'updated') }
       it { should have_link('Sign out', href: signout_path) }
       specify { user.reload.name.should == new_name }
       specify { user.reload.email.should == new_email }
+      specify { user.reload.username.should == new_username }
     end
   end
 end
