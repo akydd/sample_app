@@ -27,7 +27,7 @@ def make_users
     name = Faker::Name.name
     # Faker::Internet's user_name used ".", so we just take the existing name
     # and replace all non word chars with "_", then trunc to 15 chars.
-    username = name.gsub(/\W/, "_")[0, 15]
+    username = "user#{n}" 
     email = Faker::Internet.email(name)
     password = "password"
     User.create!(name: name,
@@ -39,8 +39,18 @@ def make_users
 end
 
 def make_microposts
-  User.all(limit: 6).each do |user|
-    50.times do
+  user1 = User.find_by_username("user1")
+  User.all(limit: 20).each do |user|
+    
+    # create microposts that are replies to user1
+    if user != user1 
+      3.times do
+        user.microposts.create!(content: Faker::Lorem.sentence(5), in_reply_to: user1.id)
+      end
+    end
+
+    # create microposts that are not replies
+    3.times do
       user.microposts.create!(content: Faker::Lorem.sentence(5))
     end
   end
@@ -48,9 +58,27 @@ end
 
 def make_relationships
   users = User.all
-  user = users.first
-  followed_users = users[1..50]
-  followers = users[3..40]
+  user = User.find_by_username("user1")
+  followed_users = users[4..50]
+  followers = users[4..40]
   followed_users.each { |followed| user.follow!(followed) }
   followers.each { |follower| follower.follow!(user) }
+end
+
+def make_replies
+  user = User.find_by_username("user1")
+
+  users_replied_to = User.all[5..10]
+  replies = user.microposts[8..12]
+
+  # make some of user's posts replies to other users
+  replies.zip(users_replied_to).each do |reply, user_replied_to|
+    reply.in_reply_to = user_replied_to.id
+  end
+
+  # make other users' posts replies to user's posts
+  users_who_replied = User.all[10..15]
+  users_who_replied.each do |user_who_replied|
+    user_who_replied.microposts[5..7].in_reply_to = user.id
+  end
 end

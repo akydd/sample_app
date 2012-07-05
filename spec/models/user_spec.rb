@@ -170,7 +170,7 @@ describe User do
       FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
     end
 
-    it "should ahve the right micriposts in the right order" do
+    it "should have the right micriposts in the right order" do
       @user.microposts.should == [newer_micropost, older_micropost]
     end
 
@@ -182,11 +182,26 @@ describe User do
       end
     end
 
-    describe "status" do
+    describe "status feed" do
+      # this post shouldn't be in @user's feed
       let(:unfollowed_post) do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
       end
       let(:followed_user) { FactoryGirl.create(:user) }
+
+      # this post should be in @user's feed, as it's a reply to someone @user
+      # is following
+      let(:reply_to_followed_user) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
+                           in_reply_to: followed_user.id)
+      end
+
+      # this post should be in @user's feed, as it's a reply to @user's post,
+      # even though it's not from a following/followed user
+      let(:reply_to_user) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
+                           in_reply_to: @user.id)
+      end
 
       before do
         @user.follow!(followed_user)
@@ -201,6 +216,8 @@ describe User do
           should include(micropost)
         end
       end
+      its(:feed) { should include(reply_to_followed_user) }
+      its(:feed) { should include(reply_to_user) }
     end
   end
 

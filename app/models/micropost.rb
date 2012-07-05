@@ -1,5 +1,5 @@
 class Micropost < ActiveRecord::Base
-  attr_accessible :content
+  attr_accessible :content, :in_reply_to
 
   belongs_to :user
 
@@ -10,12 +10,16 @@ class Micropost < ActiveRecord::Base
 
   private
 
-  # return an SQL condition for users followed by the given user.
-  # We include the user's own id as well
+  # return an SQL condition to include:
+  # All posts by the user
+  # All posts by users the user is following
+  # All replies to user's posts
+  # All replies to posts by users the user is following
   def self.from_users_followed_by(user)
     followed_user_ids = "Select followed_id from relationships
       where follower_id = :user_id"
-    where("user_id IN (#{followed_user_ids}) OR user_id = :user_id",
+    where("user_id IN (#{followed_user_ids}) OR user_id = :user_id
+          OR in_reply_to = :user_id OR in_reply_to IN (#{followed_user_ids})",
           user_id: user)
   end
 end
