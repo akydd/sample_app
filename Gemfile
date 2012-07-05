@@ -36,7 +36,6 @@ gem 'jquery-rails'
 # Bundle the extra gems:
 # gem 'bj'
 # gem 'nokogiri'
-gem 'sqlite3-ruby', :require => 'sqlite3'
 # gem 'aws-s3', :require => 'aws/s3'
 gem 'gravatar_image_tag'
 
@@ -48,10 +47,15 @@ gem 'gravatar_image_tag'
 # end
 
 group :development, :test do
-      gem 'rspec'
-      gem 'rspec-rails'
-      gem 'capybara'
-      gem 'factory_girl_rails'
-      gem 'cucumber-rails'
-      gem 'database_cleaner'
+  gem 'sqlite3-ruby', :require => 'sqlite3'
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'capybara'
+  gem 'factory_girl_rails'
+  gem 'cucumber-rails'
+  gem 'database_cleaner'
+end
+
+group :production do
+  gem 'pg'
 end
