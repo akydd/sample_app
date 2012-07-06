@@ -183,41 +183,38 @@ describe User do
     end
 
     describe "status feed" do
+
       # this post shouldn't be in @user's feed
-      let(:unfollowed_post) do
+      let(:unfollowed_user_post) do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
       end
-      let(:followed_user) { FactoryGirl.create(:user) }
-
-      # this post should be in @user's feed, as it's a reply to someone @user
-      # is following
-      let(:reply_to_followed_user) do
-        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
-                           in_reply_to: followed_user.id)
-      end
-
+      
       # this post should be in @user's feed, as it's a reply to @user's post,
       # even though it's not from a following/followed user
-      let(:reply_to_user) do
+      let(:reply_to_user_post) do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
-                           in_reply_to: @user.id)
+                           in_reply_to: older_micropost)
+      end
+
+      let(:followed_user) { FactoryGirl.create(:user) }
+      let(:followed_user_post) do
+        followed_user.microposts.create!(content: "Lorem ipsum")
+      end
+      let(:reply_to_followed_user_post) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
+                           in_reply_to: followed_user_post)
       end
 
       before do
         @user.follow!(followed_user)
-        3.times { followed_user.microposts.create!(content: "Lorem ipsum") }
       end
 
       its(:feed) { should include(newer_micropost) }
       its(:feed) { should include(older_micropost) }
-      its(:feed) { should_not include(unfollowed_post) }
-      its(:feed) do
-        followed_user.microposts.each do |micropost|
-          should include(micropost)
-        end
-      end
-      its(:feed) { should include(reply_to_followed_user) }
-      its(:feed) { should include(reply_to_user) }
+      its(:feed) { should_not include(unfollowed_user_post) }
+      its(:feed) { should include(followed_user_post) }
+      its(:feed) { should include(reply_to_followed_user_post) }
+      its(:feed) { should include(reply_to_user_post) }
     end
   end
 

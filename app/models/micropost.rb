@@ -1,7 +1,10 @@
 class Micropost < ActiveRecord::Base
-  attr_accessible :content, :in_reply_to
+  attr_accessible :content
 
   belongs_to :user
+  belongs_to :parent, class_name: 'Micropost', foreign_key: 'in_reply_to'
+  has_many :replies, :inverse 
+
 
   validates :content, presence: true, length: { maximum: 140 }
   validates :user_id, presence: true
@@ -18,8 +21,7 @@ class Micropost < ActiveRecord::Base
   def self.from_users_followed_by(user)
     followed_user_ids = "Select followed_id from relationships
       where follower_id = :user_id"
-    where("user_id IN (#{followed_user_ids}) OR user_id = :user_id
-          OR in_reply_to = :user_id OR in_reply_to IN (#{followed_user_ids})",
+    where("user_id IN (#{followed_user_ids}) OR user_id = :user_id",
           user_id: user)
   end
 end
