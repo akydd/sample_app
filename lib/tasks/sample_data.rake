@@ -45,7 +45,7 @@ def make_microposts
     # create microposts that are replies to user1
     if user != user1 
       3.times do
-        user.microposts.create!(content: Faker::Lorem.sentence(5), in_reply_to: user1.id)
+        user.microposts.create!(content: Faker::Lorem.sentence(5), in_reply_to: user1)
       end
     end
 
@@ -73,12 +73,12 @@ def make_replies
 
   # make some of user's posts replies to other users
   replies.zip(users_replied_to).each do |reply, user_replied_to|
-    reply.in_reply_to = user_replied_to.id
+    reply.in_reply_to = user_replied_to
   end
 
   # make other users' posts replies to user's posts
   users_who_replied = User.all[10..15]
   users_who_replied.each do |user_who_replied|
-    user_who_replied.microposts[5..7].in_reply_to = user.id
+    user_who_replied.microposts[5..7].in_reply_to = user
   end
 end

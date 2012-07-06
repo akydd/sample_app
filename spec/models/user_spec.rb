@@ -189,20 +189,20 @@ describe User do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
       end
       
-      # this post should be in @user's feed, as it's a reply to @user's post,
+      # this post should be in @user's feed, as it's a reply to @user
       # even though it's not from a following/followed user
-      let(:reply_to_user_post) do
+      let(:reply_to_user) do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
-                           in_reply_to: older_micropost)
+                           in_reply_to: @user)
       end
 
       let(:followed_user) { FactoryGirl.create(:user) }
       let(:followed_user_post) do
         followed_user.microposts.create!(content: "Lorem ipsum")
       end
-      let(:reply_to_followed_user_post) do
+      let(:reply_to_followed_user) do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user),
-                           in_reply_to: followed_user_post)
+                           in_reply_to: followed_user)
       end
 
       before do
@@ -213,8 +213,8 @@ describe User do
       its(:feed) { should include(older_micropost) }
       its(:feed) { should_not include(unfollowed_user_post) }
       its(:feed) { should include(followed_user_post) }
-      its(:feed) { should include(reply_to_followed_user_post) }
-      its(:feed) { should include(reply_to_user_post) }
+      its(:feed) { should include(reply_to_followed_user) }
+      its(:feed) { should include(reply_to_user) }
     end
   end
 
