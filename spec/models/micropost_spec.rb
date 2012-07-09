@@ -41,10 +41,14 @@ describe Micropost do
     its(:is_reply_to?) { should be_true }
   end
 
-  describe "set_in_reply_to when post is a reply" do
-    let(:other_user) { FactoryGirl.create(:user, username: 'other_user') }
-    before { @micropost.content = '@other_user here is my reply' }
-    its(:in_reply_to) { should == other_user } 
+  describe "in_reply_to is set when post is a reply to actual user" do
+    let!(:other_user) { FactoryGirl.create(:user, username: 'other_user') }
+    before do
+      @micropost.content = '@other_user here is my reply'
+      @micropost.save
+      @micropost.reload
+    end
+    its(:in_reply_to) { should == other_user }
   end
 
   describe "accessible attributes" do

@@ -7,14 +7,9 @@ class Micropost < ActiveRecord::Base
   validates :content, presence: true, length: { maximum: 140 }
   validates :user_id, presence: true
 
+  before_save :set_in_reply_to
+
   default_scope order: 'microposts.created_at DESC'
-
-  # override to auto-set in_reply_to based on value of content string
-  def content=(content)
-    write_attribute(:content, content)
-
-    @in_reply_to = User.find_by_username()
-  end
 
   def is_reply_to?
     !in_reply_to.nil?
@@ -22,9 +17,16 @@ class Micropost < ActiveRecord::Base
 
   private
 
-  def get_username(content)
-    # parse for "@username"
-    username = /^@\w+/.match(content)
+  def set_in_reply_to
+    # parse content for "@username"
+    username = /^@\w+/.match(self.content).to_s.gsub("@", "")
+    # if name is that of saved user, set in_reply_to to that user
+    unless username.empty?
+      reply_to_user = User.find_by_username(username)
+      unless reply_to_user.nil?
+        self.in_reply_to = reply_to_user
+      end
+    end
   end
 
   # return an SQL condition to include:
