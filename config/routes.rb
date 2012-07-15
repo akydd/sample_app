@@ -8,8 +8,9 @@ SampleApp::Application.routes.draw do
   end
 
   resources :sessions, only: [:new, :create, :destroy]
-  resources :microposts, only: [:create, :destroy]
+  resources :microposts, only: [:destroy]
   resources :relationships, only: [:create, :destroy]
+  resources :parser, only: [:create]
 
   match '/signup',	to:	'users#new'
   match '/signin',	to:	'sessions#new'

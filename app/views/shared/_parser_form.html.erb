@@ -1,0 +1,7 @@
+<%= form_tag '/parser' do %>
+  <!--%= render 'shared/error_messages', :object => f.object %-->
+  <div class="field">
+    <%= text_area_tag 'command', params[:command], placeholder: 'Compose new micropost...' %>
+  </div>
+  <%= submit_tag "Submit", class: "btn btn-large btn-primary", name: nil %>
+<% end %>

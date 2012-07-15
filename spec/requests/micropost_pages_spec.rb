@@ -30,13 +30,13 @@ describe "Micropost pages" do
 
       describe "error messages" do
         before { click_button "Submit" }
-        it { should have_content('error') }
+        it { should have_error_message("Content can't be blank") }
       end
     end
 
     describe "with valid info" do
 
-      before { fill_in 'micropost_content', with: "Lorem ipsum" }
+      before { fill_in 'command', with: "Lorem ipsum" }
 
       it "should create a micropost" do
         expect { click_button "Submit" }.should change(Micropost, :count).by(1)
