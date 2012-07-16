@@ -5,13 +5,19 @@ class Relationship < ActiveRecord::Base
   belongs_to :followed, class_name:  "User"
 
   validates :follower_id, presence:  true
-  validates :followed_id, presence:  true
+  # validates :followed_id, presence:  true
+  validate :ensure_followed_user_exists
   validate :disallow_self_referential_relationship
 
   def disallow_self_referential_relationship
    if followed_id == follower_id
-     errors.add(:followed_id, 'cannot refer back to yourself')
+     errors[:base] << 'You cannot follow yourself!'
    end
   end
 
+  def ensure_followed_user_exists
+    if followed_id.nil?
+      errors[:base] << 'User to follow does not exist!'
+    end
+  end
 end

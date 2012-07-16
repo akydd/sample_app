@@ -7,7 +7,7 @@ class Micropost < ActiveRecord::Base
   validates :content, presence: true, length: { maximum: 140 }
   validates :user_id, presence: true
 
-  before_save :set_in_reply_to
+  # before_save :set_in_reply_to
 
   default_scope order: 'microposts.created_at DESC'
 
