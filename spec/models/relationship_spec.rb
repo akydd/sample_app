@@ -34,4 +34,9 @@ describe Relationship do
     before { relationship.follower_id = nil }
     it { should_not be_valid }
   end
+
+  describe "when user tries to follow self" do
+    before { relationship.followed_id = follower.id }
+    it { should_not be_valid }
+  end
 end

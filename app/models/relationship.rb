@@ -6,4 +6,12 @@ class Relationship < ActiveRecord::Base
 
   validates :follower_id, presence:  true
   validates :followed_id, presence:  true
+  validate :disallow_self_referential_relationship
+
+  def disallow_self_referential_relationship
+   if followed_id == follower_id
+     errors.add(:followed_id, 'cannot refer back to yourself')
+   end
+  end
+
 end
