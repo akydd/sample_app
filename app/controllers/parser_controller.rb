@@ -23,16 +23,17 @@ class ParserController < ApplicationController
 #  end
 
   def create
-    command = Parser.new(params[:command], current_user).command
-    if command.execute
-      flash[:success] = command.success_message
+    invoker = CommandInvoker.new(current_user)
+    invoker.command = params[:command]
+    if invoker.execute
+      flash[:success] = invoker.success_message
       redirect_to root_path
     else
       @feed_items = []
-      if command.errors.empty?
+      if invoker.errors.empty?
         flash.now[:error] = "Unknown error"
       else
-        command.errors.full_messages.each do |err|
+        invoker.errors.full_messages.each do |err|
           flash.now[:error] = err
         end
       end

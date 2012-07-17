@@ -8,14 +8,16 @@ class MicropostCommand
     attribs = Hash.new
 
     # set the post content
-    attribs[:content] = text
+    attribs['content'] = text
 
-    # is the post a reply to a user who exists?
-    reply_username = /^@\w/.match(text).to_s.gsub("@", "")
-    unless reply_username.empty?
+    # if content contains text indicating post is a reply, try to set the
+    # in_reply_to field up.  Micropost class contains internal validation
+    # to ensure good data.
+    reply_username = Micropost.parse_reply_to_username_from_content(text)
+    unless reply_username.nil?
       reply_user = User.find_by_username(reply_username)
       unless reply_user.nil?
-        attribs[:in_reply_to] = reply_user
+        attribs['in_reply_to'] = reply_user
       end
     end
 
