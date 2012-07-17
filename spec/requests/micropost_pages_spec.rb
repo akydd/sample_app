@@ -44,4 +44,73 @@ describe "Micropost pages" do
 
     end
   end
+
+  describe "using the micropost form" do
+    before { visit root_path }
+
+    describe "follow user not currently followed" do
+      before { fill_in 'command', with: "follow #{user.username}" }
+
+      it "should increment the followed user count" do
+        expect do
+          click_button "Submit"
+        end.to change(user.followed_users, :count).by(1)
+      end
+    end
+
+    describe "unfollow a user currently following" do
+      let(:other_user) { FactoryGirl.create(:user, username: "other_user") }
+      let(:relationship) { user.relationships.build(followed_id: other_user.id) }
+
+      before { fill_in 'command', with: "unfollow other_user" }
+
+      it "should decrement the followed user count" do
+        expect do
+          click_button "Submit"
+        end.to change(user.followed_users, :count).by(-1)
+      end
+    end
+
+    describe "try to follow yourself" do
+      before { fill_in 'command', with: "follow #{user.username}" }
+
+      it "should not increment the followed user count" do
+        expect { click_button "Submit" }.should_not change(Relationship, :count)
+      end
+
+      describe "error message" do
+        before { click_button "Submit" }
+        it { should have_error_message("You cannot follow yourself!") }
+      end
+    end
+
+    describe "try to follow a user that does not exist" do
+      before { fill_in 'command', with: "follow does_not_exist" }
+
+      it "should not increment the followed user count" do
+        expect { click_button "Submit" }.should_not change(Relationship, :count)
+      end
+
+      describe "error message" do
+        before { click_button "Submit" }
+        it { should have_error_message("User to follow does not exist!") }
+      end
+    end
+
+    describe "unfollow a user that is not being followed" do
+      let(:not_followed) { FactoryGirl.create(:user, username: "not_followed") }
+
+      before { fill_in 'command', with: "unfollow #{not_followed.username}" }
+
+      it "should decrement the followed user cout" do
+        expect { click_button "Submit" }.should_not change(Relationship, :count)
+      end
+
+      describe "error message" do
+        before {click_button "Submit" }
+        it { should have_error_message("You are not following that user!") }
+      end
+    end
+
+  end
 end

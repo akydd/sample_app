@@ -170,7 +170,7 @@ describe User do
       FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
     end
 
-    it "should have the right micriposts in the right order" do
+    it "should have the right microposts in the right order" do
       @user.microposts.should == [newer_micropost, older_micropost]
     end
 
