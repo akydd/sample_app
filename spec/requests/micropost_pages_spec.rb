@@ -45,11 +45,12 @@ describe "Micropost pages" do
     end
   end
 
-  describe "using the micropost form" do
+  describe "using the micropost form for following" do
     before { visit root_path }
 
-    describe "follow user not currently followed" do
-      before { fill_in 'command', with: "follow #{user.username}" }
+    describe "follow a user not currently followed" do
+      let(:other_user) { FactoryGirl.create(:user, username: "not_followed") }
+      before { fill_in 'command', with: "follow not_followed" }
 
       it "should increment the followed user count" do
         expect do
@@ -58,7 +59,7 @@ describe "Micropost pages" do
       end
     end
 
-    describe "unfollow a user currently following" do
+    describe "unfollow a user currently being followed" do
       let(:other_user) { FactoryGirl.create(:user, username: "other_user") }
       let(:relationship) { user.relationships.build(followed_id: other_user.id) }
 
@@ -71,7 +72,7 @@ describe "Micropost pages" do
       end
     end
 
-    describe "try to follow yourself" do
+    describe "follow yourself" do
       before { fill_in 'command', with: "follow #{user.username}" }
 
       it "should not increment the followed user count" do
@@ -84,7 +85,7 @@ describe "Micropost pages" do
       end
     end
 
-    describe "try to follow a user that does not exist" do
+    describe "follow a user that does not exist" do
       before { fill_in 'command', with: "follow does_not_exist" }
 
       it "should not increment the followed user count" do

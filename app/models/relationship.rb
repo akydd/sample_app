@@ -9,6 +9,9 @@ class Relationship < ActiveRecord::Base
   validate :ensure_followed_user_exists
   validate :disallow_self_referential_relationship
 
+  FOLLOW_REGEX = /^f(ollow)?\s+\w+$/i
+  UNFOLLOW_REGEX = /^unfollow\s+\w+$/i
+
   private
 
   def disallow_self_referential_relationship

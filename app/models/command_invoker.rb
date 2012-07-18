@@ -10,11 +10,11 @@ class CommandInvoker
   def command=(text)
     text.strip!
 
-    if /^f(ollow)?\s+\w+$/i.match(text) # text matched to follow a user
+    if Relationship::FOLLOW_REGEX.match(text) # follow a user
       @command = FollowCommand.new(text, @user)
-    elsif /^unfollow\s+\w+$/i.match(text) # text matched to unfollow a user
+    elsif Relationship::UNFOLLOW_REGEX.match(text) # unfollow a user
       @command = UnfollowCommand.new(text, @user)
-    elsif /^d(m)?\s+\w+/i.match(text) # text matched to direct message a user
+    elsif /^d(m)?\s+\w+/i.match(text) # direct message a user
       @command = MessageCommand.new(text, @user)
     else # all others, create a micropost
       @command = MicropostCommand.new(text, @user)
