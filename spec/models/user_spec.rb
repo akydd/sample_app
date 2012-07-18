@@ -26,6 +26,8 @@ describe User do
   it { should respond_to(:following?) }
   it { should respond_to(:follow!) }
   it { should respond_to(:unfollow!) }
+  it { should respond_to(:sent_messages) }
+  it { should respond_to(:received_messages) }
 
   it { should be_valid }
   it { should_not be_admin }
@@ -260,4 +262,30 @@ describe User do
       User.all.should == [anakin, maul, vader, yoda]
     end
   end
+
+  describe "messages ordering" do
+    let(:recipient) { FactoryGirl.create(:user) }
+
+    before do
+      @user.save
+    end
+
+    let!(:old_msg) do
+      FactoryGirl.create(:message, sender: @user, recipient: recipient,
+                         created_at: 1.day.ago)
+    end
+    let!(:new_msg) do
+      FactoryGirl.create(:message, sender: @user, recipient: recipient,
+                         created_at: 1.hour.ago)
+    end
+
+    it "should order the sent msgs with newest first" do
+      @user.sent_messages.should == [new_msg, old_msg]
+    end
+
+    it "should order the received msgs with newest first" do
+      recipient.received_messages.should == [new_msg, old_msg]
+    end
+  end
+
 end

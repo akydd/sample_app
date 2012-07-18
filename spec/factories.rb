@@ -16,4 +16,10 @@ FactoryGirl.define do
     content "Lorem ipsum"
     user
   end
+
+  factory :message do
+    content "A message for you, Rudy!"
+    association :sender
+    association :recipient
+  end
 end

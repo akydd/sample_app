@@ -5,6 +5,7 @@ namespace :db do
     make_users
     make_microposts
     make_relationships
+    make_messages
   end
 end
 
@@ -80,5 +81,14 @@ def make_replies
   users_who_replied = User.all[10..15]
   users_who_replied.each do |user_who_replied|
     user_who_replied.microposts[5..7].in_reply_to = user
+  end
+end
+
+def make_messages
+  from_users = User.all.reject{ |user| user.id.odd? }
+  to_users = User.all.reject{ |user| user.id.even? }
+
+  from_users.zip(to_users).each do |from_user, to_user|
+    from_user.sent_messages.create!(content: Faker::Lorem.sentence(5), to_user_id: to_user.id)
   end
 end
