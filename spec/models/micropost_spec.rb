@@ -55,6 +55,14 @@ describe Micropost do
     it { should_not be_valid }
   end
 
+  describe "post is by user, in reply to same user" do
+    before do
+      @micropost.content = "@#{user.username} here is my reply"
+      @micropost.in_reply_to = user
+    end
+    it { should_not be_valid }
+  end
+
   describe "accessible attributes" do
     it "should not allow access to user_id" do
       expect do

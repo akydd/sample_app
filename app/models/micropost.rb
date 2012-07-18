@@ -9,6 +9,7 @@ class Micropost < ActiveRecord::Base
   validates :content, presence: true, length: { maximum: 140 }
   validates :user_id, presence: true
   validate :in_reply_to_username_match
+  validate :user_cannot_reply_to_self
 
   default_scope order: 'microposts.created_at DESC'
 
@@ -17,6 +18,14 @@ class Micropost < ActiveRecord::Base
   end
 
   private
+
+  def user_cannot_reply_to_self
+    if is_reply_to?
+      if in_reply_to == user
+        errors[:base] << "You cannot reply to yourself!"
+      end
+    end
+  end
 
   def in_reply_to_username_match
     in_reply_to_username = Micropost.parse_reply_to_username_from_content(self.content)

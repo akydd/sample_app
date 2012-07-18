@@ -29,8 +29,13 @@ class CommandInvoker
     @command.success_message
   end
 
+  # command's errors may or may not be ActiveRecord:Error
   def errors
-    @command.errors
+    if @command.errors.respond_to?(:full_messages)
+      @command.errors.full_messages
+    else
+      @command.errors
+    end
   end
 
 end
