@@ -49,7 +49,7 @@ describe "Micropost pages" do
     before { visit root_path }
 
     describe "follow a user not currently followed" do
-      let(:other_user) { FactoryGirl.create(:user, username: "not_followed") }
+      let!(:other_user) { FactoryGirl.create(:user, username: "not_followed") }
       before { fill_in 'command', with: "follow not_followed" }
 
       it "should increment the followed user count" do

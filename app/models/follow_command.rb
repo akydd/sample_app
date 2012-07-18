@@ -1,5 +1,7 @@
 class FollowCommand
 
+  attr_reader :success_message
+
   def initialize(text, user)
     attribs = Hash.new
 
