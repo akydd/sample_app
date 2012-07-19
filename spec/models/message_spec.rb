@@ -29,6 +29,11 @@ describe Message do
     it { should_not be_valid }
   end
 
+  describe "when sender = recipient" do
+    before { @message.to_user_id = from_user.id }
+    it { should_not be_valid }
+  end
+
   describe "when content is not present" do
     before { @message.content = nil }
     it { should_not be_valid }
