@@ -14,8 +14,10 @@ class User < ActiveRecord::Base
     dependent: :destroy
   has_many :followers, through: :reverse_relationships, source: :follower
 
-  has_many :sent_messages, class_name: "Message", foreign_key: :from_user_id
-  has_many :received_messages, class_name: "Message", foreign_key: :to_user_id
+  has_many :sent_messages, class_name: "Message", foreign_key: :from_user_id,
+    dependent: :destroy
+  has_many :received_messages, class_name: "Message", foreign_key: :to_user_id,
+    dependent: :destroy
 
   VALID_EMAIL_REGEX =/\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   VALID_USERNAME_REGEX = /\A\w+\z/

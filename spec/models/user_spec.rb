@@ -263,11 +263,12 @@ describe User do
     end
   end
 
-  describe "messages ordering" do
+  describe "messages associations" do
     let(:recipient) { FactoryGirl.create(:user) }
 
     before do
       @user.save
+      recipient.follow!(@user)
     end
 
     let!(:old_msg) do
@@ -286,6 +287,23 @@ describe User do
     it "should order the received msgs with newest first" do
       recipient.received_messages.should == [new_msg, old_msg]
     end
+
+    it "should destroy associated sent messages" do
+      messages = @user.sent_messages
+      @user.destroy
+      messages.each do |msg|
+        Message.find_by_id(msg.id).should be_nil
+      end
+    end
+
+    it "should destroy associated received messages" do
+      messages = recipient.received_messages
+      recipient.destroy
+      messages.each do |msg|
+        Message.find_by_id(msg.id).should be_nil
+      end
+    end
+
   end
 
 end

@@ -5,6 +5,7 @@ describe Message do
   let(:to_user) { FactoryGirl.create(:user) }
 
   before do
+    to_user.follow!(from_user)
     @message = from_user.sent_messages.build(content: "Lorem ipsum",
                                              to_user_id: to_user.id)
   end
@@ -24,6 +25,11 @@ describe Message do
     it { should_not be_valid }
   end
 
+  describe "when recipient is not someone followed by user" do
+    before { to_user.unfollow!(from_user) }
+    it { should_not be_valid }
+  end
+
   describe "when from_user_id is not present" do
     before { @message.from_user_id = nil }
     it { should_not be_valid }
@@ -36,6 +42,21 @@ describe Message do
 
   describe "when content is not present" do
     before { @message.content = nil }
+    it { should_not be_valid }
+  end
+
+  describe "when content is too long" do
+    before { @message.content = "a" * 141 }
+    it { should_not be_valid }
+  end
+
+  describe "when content is ok" do
+    before { @message.content = "a" * 140 }
+    it { should be_valid }
+  end
+
+  describe "when content is blank" do
+    before { @message.content = "" }
     it { should_not be_valid }
   end
 

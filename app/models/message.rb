@@ -4,19 +4,31 @@ class Message < ActiveRecord::Base
   belongs_to :sender, class_name: "User", foreign_key: :from_user_id
   belongs_to :recipient, class_name: "User", foreign_key: :to_user_id
 
-  validates :content, presence: true
+  MESSAGE_REGEX = /^d(m)?\s+\w+/i
+
+  validates :content, presence: true, length: { maximum: 140 }
   validates :from_user_id, presence: true
   validates :to_user_id, presence: true
-  validate :message_sender_cannot_equal_recipient
+  validate :message_sender_cannot_equal_recipient, unless: :missing_user?
+  validate :recipient_must_follow_sender, unless: :missing_user?
 
   default_scope order: 'messages.created_at DESC'
 
   private
 
   def message_sender_cannot_equal_recipient
-    if from_user_id == to_user_id
+    if sender == recipient
       errors[:base] << "You cannot send a message to yourself!"
     end
   end
 
+  def recipient_must_follow_sender
+    if !recipient.following?(sender)
+      errors[:base] << "Recipient is not following you!"
+    end
+  end
+
+  def missing_user?
+    sender.nil? || recipient.nil?
+  end
 end

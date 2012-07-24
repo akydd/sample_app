@@ -14,7 +14,7 @@ class CommandInvoker
       @command = FollowCommand.new(text, @user)
     elsif Relationship::UNFOLLOW_REGEX.match(text) # unfollow a user
       @command = UnfollowCommand.new(text, @user)
-    elsif /^d(m)?\s+\w+/i.match(text) # direct message a user
+    elsif Message::MESSAGE_REGEX.match(text) # direct message a user
       @command = MessageCommand.new(text, @user)
     else # all others, create a micropost
       @command = MicropostCommand.new(text, @user)
