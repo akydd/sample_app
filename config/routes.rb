@@ -1,9 +1,8 @@
 SampleApp::Application.routes.draw do
 
   resources :users do
-    resources :microposts, :only => [:index]
     member do
-      get :following, :followers
+      get :following, :followers, :messages
     end
   end
 

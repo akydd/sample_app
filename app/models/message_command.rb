@@ -1,5 +1,7 @@
 class MessageCommand
 
+  attr_reader :success_message
+
   def initialize(text, user)
     @success_message = "Message sent!"
 
@@ -9,7 +11,7 @@ class MessageCommand
     recipient = User.find_by_username(recipient_username)
 
     unless recipient.nil?
-      attribS['recipient'] = recipient
+      attribs['to_user_id'] = recipient.id
     end
 
     attribs['content'] = text.split[2]

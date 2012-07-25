@@ -2,11 +2,6 @@ class MicropostsController < ApplicationController
   before_filter :signed_in_user, only: [:destroy]
   before_filter :current_user, only: :destroy
 
-  def index
-    @user = User.find(params[:user_id])
-    @microposts = @user.microposts.all.paginate(:page => params[:page])
-  end
-
   #def create
   #  @micropost = current_user.microposts.build(params[:micropost])
   #  if @micropost.save
