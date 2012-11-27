@@ -1,22 +1,22 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.6'
+gem 'rails', '3.2.9'
 gem 'will_paginate'
-gem 'bootstrap-sass'
+gem 'bootstrap-sass', '2.1'
 gem 'bcrypt-ruby'
 gem 'faker'
 gem 'bootstrap-will_paginate'
 
 # Asset pipeline stuff for 3.2.5+
 group :assets do
-  gem 'sass-rails'
-  gem 'coffee-rails'
+  gem 'sass-rails', '3.2.5'
+  gem 'coffee-rails', '3.2.2'
   gem 'therubyracer', :platform => :ruby 
   gem 'execjs'
-  gem 'uglifier'
+  gem 'uglifier', '1.2.3'
 end
 
-gem 'jquery-rails'
+gem 'jquery-rails', '2.0.2'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -47,15 +47,15 @@ gem 'gravatar_image_tag'
 # end
 
 group :development, :test do
-  gem 'sqlite3-ruby', :require => 'sqlite3'
-  gem 'rspec'
-  gem 'rspec-rails'
-  gem 'capybara'
+  gem 'sqlite3', '1.3.5'
+#  gem 'rspec'
+  gem 'rspec-rails', '2.11.0'
+  gem 'capybara', '1.1.2'
   gem 'factory_girl_rails'
   gem 'cucumber-rails'
   gem 'database_cleaner'
 end
 
 group :production do
-  gem 'pg'
+  gem 'pg', '0.12.2'
 end

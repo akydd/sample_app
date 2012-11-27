@@ -27,8 +27,8 @@ ActiveRecord::Schema.define(:version => 20120718185625) do
   create_table "microposts", :force => true do |t|
     t.string   "content"
     t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
     t.integer  "in_reply_to"
   end
 
@@ -37,8 +37,8 @@ ActiveRecord::Schema.define(:version => 20120718185625) do
   create_table "relationships", :force => true do |t|
     t.integer  "follower_id"
     t.integer  "followed_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   add_index "relationships", ["followed_id"], :name => "index_relationships_on_followed_id"
@@ -48,8 +48,8 @@ ActiveRecord::Schema.define(:version => 20120718185625) do
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                         :null => false
+    t.datetime "updated_at",                         :null => false
     t.boolean  "admin",           :default => false
     t.string   "password_digest"
     t.string   "remember_token"
