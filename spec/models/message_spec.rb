@@ -64,7 +64,7 @@ describe Message do
     it "should not allow access to from_user_id" do
       expect do
         Message.new(from_user_id: from_user.id)
-      end.should raise_error(ActiveModel::MassAssignmentSecurity::Error)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
 
   end

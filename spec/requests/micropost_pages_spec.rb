@@ -14,7 +14,7 @@ describe "Micropost pages" do
       before { visit root_path }
 
       it "should delete a micropost" do
-        expect { click_link "delete" }.should change(Micropost, :count).by(-1)
+        expect { click_link "delete" }.to change(Micropost, :count).by(-1)
       end
     end
   end
@@ -25,7 +25,7 @@ describe "Micropost pages" do
     describe "with invalid information" do
 
       it "should not create a micropost" do
-        expect { click_button "Submit" }.should_not change(Micropost, :count)
+        expect { click_button "Submit" }.not_to change(Micropost, :count)
       end
 
       describe "error messages" do
@@ -39,7 +39,7 @@ describe "Micropost pages" do
       before { fill_in 'command', with: "@#{user.username} here is my reply" }
 
       it "should not create a micropost" do
-        expect { click_button "Submit" }.should_not change(Micropost, :count)
+        expect { click_button "Submit" }.not_to change(Micropost, :count)
       end
 
       describe "error message" do
@@ -54,7 +54,7 @@ describe "Micropost pages" do
       before { fill_in 'command', with: "Lorem ipsum" }
 
       it "should create a micropost" do
-        expect { click_button "Submit" }.should change(Micropost, :count).by(1)
+        expect { click_button "Submit" }.to change(Micropost, :count).by(1)
       end
 
     end
@@ -68,7 +68,7 @@ describe "Micropost pages" do
       before { fill_in 'command', with: "dm #{other_user.username} message" }
 
       it "should not create a new message" do
-        expect { click_button "Submit" }.should_not change(Message, :count)
+        expect { click_button "Submit" }.not_to change(Message, :count)
       end
 
       describe "error message" do
@@ -81,7 +81,7 @@ describe "Micropost pages" do
       before { fill_in 'command', with: "dm does_not_exist message" }
 
       it "should not create a new message" do
-        expect { click_button "Submit" }.should_not change(Message, :count)
+        expect { click_button "Submit" }.not_to change(Message, :count)
       end
 
       describe "error message" do
@@ -94,7 +94,7 @@ describe "Micropost pages" do
       before { fill_in 'command', with: "dm #{user.username} message" }
 
       it "should not create a message" do
-        expect { click_button "Submit" }.should_not change(Message, :count)
+        expect { click_button "Submit" }.not_to change(Message, :count)
       end
 
       describe "error message" do
@@ -162,7 +162,7 @@ describe "Micropost pages" do
       before { fill_in 'command', with: "follow #{user.username}" }
 
       it "should not increment the followed user count" do
-        expect { click_button "Submit" }.should_not change(Relationship, :count)
+        expect { click_button "Submit" }.not_to change(Relationship, :count)
       end
 
       describe "error message" do
@@ -175,7 +175,7 @@ describe "Micropost pages" do
       before { fill_in 'command', with: "follow does_not_exist" }
 
       it "should not increment the followed user count" do
-        expect { click_button "Submit" }.should_not change(Relationship, :count)
+        expect { click_button "Submit" }.not_to change(Relationship, :count)
       end
 
       describe "error message" do
@@ -190,7 +190,7 @@ describe "Micropost pages" do
       before { fill_in 'command', with: "unfollow #{not_followed.username}" }
 
       it "should decrement the followed user count" do
-        expect { click_button "Submit" }.should_not change(Relationship, :count)
+        expect { click_button "Submit" }.not_to change(Relationship, :count)
       end
 
       describe "error message" do
