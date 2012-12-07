@@ -1,0 +1,14 @@
+<% provide(:title, @title) %>
+<div class="row">
+  <aside class="span4">
+    <section>
+      <%= gravatar_for @user %>
+      <h1><%= @user.username %></h1>
+      <span><%= link_to "view my profile", @user %></span>
+      <span><b>Messages:</b> <%= @sent_messages.count %></span>
+    </section>
+  <section>
+    <%= render 'shared/stats' %>
+  </section>
+  </aside>
+</div>

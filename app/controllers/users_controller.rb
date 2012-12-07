@@ -1,10 +1,10 @@
 class UsersController < ApplicationController
   # Filters are applied in order of appearance!
-  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy, :following, :followers, :messages]
-  before_filter :correct_user, only: [:edit, :update, :messages]
+  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
+  before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
   before_filter :admin_cannot_delete_self, only: :destroy
-  before_filter :not_for_authenticated_users, :only => [:new, :create]
+  before_filter :not_for_authenticated_users, only: [:new, :create]
 
   def index
     @users = User.search(params[:search], params[:page])
@@ -63,11 +63,18 @@ class UsersController < ApplicationController
     render 'show_follow'
   end
 
-  def messages
-    @title = "Messages"
+  def messages_to
+    @title = "Received Messages"
     @user = User.find(params[:id])
-    @received_messages = @user.received_messages
-    render 'show_messages'
+    @received_messages = @user.received_messages.paginate(page: params[:page])
+    render 'show_messages_to'
+  end
+
+  def messages_from
+    @title = "Sent Messages"
+    @user = User.find(params[:id])
+    @sent_messages = @user.sent_messages.paginate(page: params[:page])
+    render 'show_messages_from'
   end
 
   private

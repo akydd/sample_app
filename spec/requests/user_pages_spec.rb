@@ -3,15 +3,26 @@ require 'spec_helper'
 describe "User Pages" do
   subject { page }
 
-  describe "messages" do
+  describe "messages to" do
     let(:user) { FactoryGirl.create(:user) }
 
     before do
       sign_in user
-      visit messages_user_path(user)
+      visit messages_to_user_path(user)
     end
 
-    it { should have_selector('title', text: full_title('Messages')) }
+    it { should have_selector('title', text: full_title('Received Messages')) }
+  end
+
+  describe "messages from" do
+    let(:user) { FactoryGirl.create(:user) }
+
+    before do
+      sign_in user
+      visit messages_from_user_path(user)
+    end
+
+    it { should have_selector('title', text: full_title('Sent Messages')) }
   end
 
   describe "following/followers" do

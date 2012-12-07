@@ -31,7 +31,8 @@ describe "Authentication" do
       it { should have_selector('title', text: user.username) }
       it { should have_link('Users', href: users_path) }
       it { should have_link('Profile', href: user_path(user)) }
-      it { should have_link('Messages', href: messages_user_path(user)) }
+      it { should have_link('Sent', href: messages_from_user_path(user)) }
+      it { should have_link('Received', href: messages_to_user_path(user)) }
       it { should have_link('Settings', href: edit_user_path(user)) }
       it { should have_link('Sign out', href: signout_path) }
       it { should_not have_link('Sign In', href: signin_path) }
