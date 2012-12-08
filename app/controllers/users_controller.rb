@@ -66,15 +66,15 @@ class UsersController < ApplicationController
   def messages_to
     @title = "Received Messages"
     @user = User.find(params[:id])
-    @received_messages = @user.received_messages.paginate(page: params[:page])
-    render 'show_messages_to'
+    @messages = @user.received_messages.paginate(page: params[:page])
+    render 'show_messages'
   end
 
   def messages_from
     @title = "Sent Messages"
     @user = User.find(params[:id])
-    @sent_messages = @user.sent_messages.paginate(page: params[:page])
-    render 'show_messages_from'
+    @messages = @user.sent_messages.paginate(page: params[:page])
+    render 'show_messages'
   end
 
   private

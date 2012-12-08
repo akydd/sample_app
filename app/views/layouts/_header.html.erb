@@ -13,8 +13,8 @@
             Messages <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
-            <li><%= link_to "Received", messages_from_user_path(current_user) %></li>
-            <li><%= link_to "Sent", messages_to_user_path(current_user) %></li>
+            <li><%= link_to "Received", messages_to_user_path(current_user) %></li>
+            <li><%= link_to "Sent", messages_from_user_path(current_user) %></li>
           </ul>
         <li id="fat-menu" class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
