@@ -6,7 +6,19 @@ describe "User Pages" do
   describe "message pages" do
 
     let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    let(:msg_to) { FactoryGirl.build(:message, sender: other_user,
+                                   recipient: user,
+                                   content: "message to") }
+    let(:msg_from) { FactoryGirl.build(:message, sender: user,
+                                   recipient: other_user,
+                                   content: "message from") }
+
     before do
+      user.follow!(other_user)
+      other_user.follow!(user)
+      msg_to.save
+      msg_from.save
       sign_in user
     end
 
@@ -16,6 +28,7 @@ describe "User Pages" do
       end
 
       it { should have_selector('title', text: full_title('Received Messages')) }
+      it { should have_selector("span.content", text: msg_to.content) }
     end
 
     describe "messages from" do
@@ -24,6 +37,7 @@ describe "User Pages" do
       end
 
       it { should have_selector('title', text: full_title('Sent Messages')) }
+      it { should have_selector("span.content", text: msg_from.content) }
     end
   end
 

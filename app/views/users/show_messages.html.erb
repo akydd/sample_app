@@ -3,12 +3,21 @@
   <aside class="span4">
     <section>
       <%= gravatar_for @user %>
-      <h1><%= @user.username %></h1>
-      <span><%= link_to "view my profile", @user %></span>
-      <span><b>Messages:</b> <%= @messages.count %></span>
+      <%= @user.username %>
     </section>
   <section>
     <%= render 'shared/stats' %>
   </section>
   </aside>
+  <div class="span8">
+      <h3><%= @title %> (<%= @messages.count %>)</h3>
+    <% if @messages.any? %>
+      <ol class="microposts">
+        <%= render partial: "users/message", collection: @messages %>
+      </ol>
+      <%= will_paginate @messages %>
+    <% else %>
+      No messages!
+    <% end %>
+  </div>
 </div>
