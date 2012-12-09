@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   # Filters are applied in order of appearance!
-  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
-  before_filter :correct_user, only: [:edit, :update]
+  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy, :following, :followers, :messages_to, :messages_from]
+  before_filter :correct_user, only: [:edit, :update, :messages_to, :messages_from]
   before_filter :admin_user, only: :destroy
   before_filter :admin_cannot_delete_self, only: :destroy
   before_filter :not_for_authenticated_users, only: [:new, :create]

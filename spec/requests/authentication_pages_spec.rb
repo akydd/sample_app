@@ -126,6 +126,16 @@ describe "Authentication" do
           it { should have_selector('title', text: 'Sign in') }
         end
 
+        describe "visiting the messages_to page" do
+          before { visit messages_to_user_path(user) }
+          it { should have_selector('title', text: 'Sign in') }
+        end
+
+        describe "visiting the messages_from page" do
+          before { visit messages_from_user_path(user) }
+          it { should have_selector('title', text: 'Sign in') }
+        end
+
         describe "after signing in" do
 
           before { sign_in user }
@@ -151,6 +161,16 @@ describe "Authentication" do
       describe "visiting the edit page" do
         before { visit edit_user_path(wrong_user) }
         it { should_not have_selector('title', text: full_title('Edit User')) }
+      end
+
+      describe "visiting the messages_to page" do
+        before { visit messages_to_user_path(wrong_user) }
+        it { should_not have_selector('title', text: full_title('Received Messages')) }
+      end
+
+      describe "visiting the messages_from page" do
+        before { visit messages_from_user_path(wrong_user) }
+        it { should_not have_selector('title', text: full_title('Sent Messages')) }
       end
 
       describe "submitting PUT request to the Users#update action" do
