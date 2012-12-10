@@ -1,6 +1,11 @@
 <li>
 <span class="content"><%= message.content %></span>
 <span class="timestamp">
-  Sent <%= time_ago_in_words(message.created_at) %> ago
+  <% if current_user?(message.sender) %>
+    Sent to <%= link_to message.recipient.username, message.recipient %>
+  <% else %>
+    Sent from <%= link_to message.sender.username, message.sender %>
+  <% end %>
+  <%= time_ago_in_words(message.created_at) %> ago
 </span>
 </li>

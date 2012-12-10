@@ -29,6 +29,8 @@ describe "User Pages" do
 
       it { should have_selector('title', text: full_title('Received Messages')) }
       it { should have_selector("span.content", text: msg_to.content) }
+      it { should have_content("Sent from") }
+      it { should have_link(other_user.username, href: user_path(other_user)) }
     end
 
     describe "messages from" do
@@ -38,6 +40,8 @@ describe "User Pages" do
 
       it { should have_selector('title', text: full_title('Sent Messages')) }
       it { should have_selector("span.content", text: msg_from.content) }
+      it { should have_content("Sent to") }
+      it { should have_link(other_user.username, href: user_path(other_user)) }
     end
   end
 
