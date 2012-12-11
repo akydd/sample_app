@@ -1,10 +1,10 @@
 <% provide(:title, 'Help') %>
 <h1>Help</h1>
 <p>
-  Get help on Ruby on Rails Tutorial at the
-  <a href="http://railstutorial.org/help">Rails Tutorial help page</a>.
-  To get help on this sample app, see the
-  <a href="http://railstutorial.org/book">Rails Tutorial book</a>.
+Get help on Ruby on Rails Tutorial at the
+<a href="http://railstutorial.org/help">Rails Tutorial help page</a>.
+To get help on this sample app, see the
+<a href="http://railstutorial.org/book">Rails Tutorial book</a>.
 </p>
 <p>
 Added/modified functionality:
@@ -13,11 +13,22 @@ Added/modified functionality:
   <li>User index page has a search form to search for all users by username</li>
   <li>Admin users can delete other admin users</li>
   <li>Signin is by username and password</li>
+  <li>Users have direct messages</li>
+  <ul>
+    <li>They can only be viewed by the sender and receiver</li>
+    <li>They can only be sent to followers</li>
+    <li>Pages to view them are accessible under the new Messages nav bar drop down</li>
+  </ul>
   <li>Users can use the micropost form to perform other actions:
   <ul>
     <li>Reply to other users by prefixing posts with <i>@[username]</i></li>
     <li>Follow other users by typing <i>follow [username]</i> or <i>f [username]</i></li>
     <li>Unfollow a user by typing <i>unfollow [username]</i></li>
+    <li>
+    Send a direct message to a follower by typing
+    <i>dm [username] [message text]</li> or 
+      <i>m [username] [message text]</i>
+      </li>
+    </ul>
   </ul>
-</ul>
-</p>
+  </p>
