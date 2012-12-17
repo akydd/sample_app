@@ -1,5 +1,12 @@
 require 'spec_helper'
 
+####
+# 
+# Capybara 2 no longer "sees" the title, so it cannot check it.
+# with have_selector('title', text: "text")
+#
+###
+
 describe "User Pages" do
   subject { page }
 
@@ -8,11 +15,11 @@ describe "User Pages" do
     let(:user) { FactoryGirl.create(:user) }
     let(:other_user) { FactoryGirl.create(:user) }
     let(:msg_to) { FactoryGirl.build(:message, sender: other_user,
-                                   recipient: user,
-                                   content: "message to") }
+                                     recipient: user,
+                                     content: "message to") }
     let(:msg_from) { FactoryGirl.build(:message, sender: user,
-                                   recipient: other_user,
-                                   content: "message from") }
+                                       recipient: other_user,
+                                       content: "message from") }
 
     before do
       user.follow!(other_user)
@@ -27,7 +34,6 @@ describe "User Pages" do
         visit messages_to_user_path(user)
       end
 
-      it { should have_selector('title', text: full_title('Received Messages')) }
       it { should have_selector("span.content", text: msg_to.content) }
       it { should have_content("Sent from") }
       it { should have_link(other_user.username, href: user_path(other_user)) }
@@ -38,7 +44,6 @@ describe "User Pages" do
         visit messages_from_user_path(user)
       end
 
-      it { should have_selector('title', text: full_title('Sent Messages')) }
       it { should have_selector("span.content", text: msg_from.content) }
       it { should have_content("Sent to") }
       it { should have_link(other_user.username, href: user_path(other_user)) }
@@ -56,7 +61,6 @@ describe "User Pages" do
         visit following_user_path(user)
       end
 
-      it { should have_selector('title', text: full_title('Following')) }
       it { should have_selector('h3', text: 'Following') }
       it { should have_link(other_user.username, href: user_path(other_user)) }
     end
@@ -67,7 +71,6 @@ describe "User Pages" do
         visit followers_user_path(other_user)
       end
 
-      it { should have_selector('title', text: full_title('Followers')) }
       it { should have_selector('h3', text: 'Followers') }
       it { should have_link(user.username, href: user_path(user)) }
     end
@@ -116,7 +119,6 @@ describe "User Pages" do
       visit users_path
     end
 
-    it { should have_selector('title', text: 'Users') }
     it { should have_selector('h1', text: 'Users') }
     # check for search form.  Search tests are above.
     it { should have_selector('input') }
@@ -131,28 +133,39 @@ describe "User Pages" do
         end
       end
     end
+  end
 
-    describe "delete links" do
+  describe "delete links in index" do
+    let!(:user) { FactoryGirl.create(:user) }
+    before(:all) { 3.times { FactoryGirl.create(:user) } }
+    after(:all) { User.delete_all }
+
+    describe "as non-admin user" do
+      before(:each) do
+        sign_in user
+        visit users_path
+      end
 
       it { should_not have_link('delete') }
+    end
 
-      describe "as an admin user" do
-        let(:admin) { FactoryGirl.create(:admin) }
-        let(:other_admin) { FactoryGirl.create(:admin) }
-        before do
-          sign_in admin
-          visit users_path
-        end
+    describe "as an admin user" do
+      let(:admin) { FactoryGirl.create(:admin) }
+      let(:other_admin) { FactoryGirl.create(:admin) }
 
-        it { should have_link('delete', href: user_path(User.first)) }
-
-        it "should be able to delete another user" do
-          expect { click_link('delete') }.to change(User, :count).by(-1)
-        end
-
-        it { should_not have_link('delete', href: user_path(admin)) }
-
+      before do
+        sign_in admin
+        visit users_path
       end
+
+      it { should have_link('delete', href: user_path(user)) }
+
+      it "should be able to delete another user" do
+        expect { click_link("delete-#{user.id}") }.to change(User, :count).by(-1)
+      end
+
+      it { should_not have_link('delete', href: user_path(admin)) }
+
     end
   end
 
@@ -163,7 +176,6 @@ describe "User Pages" do
 
     before { visit user_path(user) }
 
-    it { should have_selector('title', text: user.username) }
     it { should have_selector('h1', text: user.username) }
     it { should have_selector('h4', text: user.name) }
 
@@ -194,7 +206,8 @@ describe "User Pages" do
 
         describe "toggling the button" do
           before { click_button "Follow" }
-          it { should have_selector('input', value: 'Unfollow') }
+          it { should_not have_button "Follow" }
+          it { should have_button "Unfollow" }
         end
       end
 
@@ -218,7 +231,8 @@ describe "User Pages" do
 
         describe "toggling the button" do
           before { click_button "Unfollow" }
-          it { should have_selector('input', value: 'Follow') }
+          it { should_not have_button("Unfollow") }
+          it { should have_button("Follow") }
         end
       end
     end
@@ -227,8 +241,7 @@ describe "User Pages" do
   describe "signup page" do
     before { visit signup_path }
 
-    it { should have_selector('h1',	content: "Sign up") }
-    it { should have_selector('title', content: full_title("Sign up")) }
+    it { should have_selector('h1',	text: "Sign up") }
   end
 
   describe "signup" do
@@ -243,7 +256,6 @@ describe "User Pages" do
     describe "after submission" do
       before { click_button "Sign up" }
 
-      it { should have_selector('title', content: full_title("Sign up")) }
       it { should have_content('error') }
     end
 
@@ -264,7 +276,6 @@ describe "User Pages" do
         before { click_button "Sign up"}
         let(:user) { User.find_by_email('user@example.com') }
 
-        it { should have_selector('title', text: user.username) }
         it { should have_selector('div', text: "Welcome") }
       end
     end
@@ -291,7 +302,6 @@ describe "User Pages" do
         click_button "Update"
       end
 
-      it { should have_selector('title', text: user.username) }
       it { should have_selector('div', text: 'updated') }
       it { should have_link('Sign out', href: signout_path) }
       specify { user.reload.name.should == new_name }

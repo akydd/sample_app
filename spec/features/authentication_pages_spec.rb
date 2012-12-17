@@ -6,7 +6,7 @@ describe "Authentication" do
 
   describe "signin page" do
     before { visit signin_path }
-    it { should have_selector('title', content: 'Sign In') }
+    it { should have_selector('h1', text: 'Sign In') }
   end
 
   describe "signin" do
@@ -15,7 +15,7 @@ describe "Authentication" do
     describe "with invalid info" do
       before { click_button "Sign in" }
 
-      it { should have_selector('title', content: 'Sign In') }
+      it { should have_selector('h1', text: 'Sign In') }
       it { should have_error_message('Invalid') } 
 
       describe "after visiting another page" do
@@ -28,7 +28,7 @@ describe "Authentication" do
       let(:user) { FactoryGirl.create(:user) }
       before { sign_in user }
 
-      it { should have_selector('title', text: user.username) }
+      it { should have_selector('h1', text: user.username) }
       it { should have_link('Users', href: users_path) }
       it { should have_link('Profile', href: user_path(user)) }
       it { should have_link('Sent', href: messages_from_user_path(user)) }
@@ -92,7 +92,7 @@ describe "Authentication" do
 
         describe "after signing in" do
           it "should render the desired protected page" do
-            page.should have_selector('title', text: 'Edit user')
+            page.should have_selector('h1', text: 'Update your profile')
           end
         end
       end
@@ -101,7 +101,7 @@ describe "Authentication" do
 
         describe "visiting the edit page" do
           before { visit edit_user_path(user) }
-          it { should have_selector('title', text: 'Sign in') }
+          it { should have_selector('h1', text: 'Sign In') }
         end
 
         describe "submitting to the update action" do
@@ -113,27 +113,27 @@ describe "Authentication" do
 
         describe "visiting the user index" do
           before { visit users_path }
-          it { should have_selector('title', text: 'Sign in') }
+          it { should have_selector('h1', text: 'Sign In') }
         end
 
         describe "visiting the following page" do
           before { visit following_user_path(user) }
-          it { should have_selector('title', text: 'Sign in') }
+          it { should have_selector('h1', text: 'Sign In') }
         end
 
         describe "visiting the followers page" do
           before { visit followers_user_path(user) }
-          it { should have_selector('title', text: 'Sign in') }
+          it { should have_selector('h1', text: 'Sign In') }
         end
 
         describe "visiting the messages_to page" do
           before { visit messages_to_user_path(user) }
-          it { should have_selector('title', text: 'Sign in') }
+          it { should have_selector('h1', text: 'Sign In') }
         end
 
         describe "visiting the messages_from page" do
           before { visit messages_from_user_path(user) }
-          it { should have_selector('title', text: 'Sign in') }
+          it { should have_selector('h1', text: 'Sign In') }
         end
 
         describe "after signing in" do

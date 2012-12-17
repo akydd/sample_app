@@ -7,6 +7,9 @@ gem 'bcrypt-ruby'
 gem 'faker'
 gem 'bootstrap-will_paginate'
 
+# need this for therubyracer
+gem 'libv8', '~> 3.11.8'
+
 # Asset pipeline stuff for 3.2.5+
 group :assets do
   gem 'sass-rails', '3.2.5'
@@ -49,11 +52,14 @@ gem 'gravatar_image_tag'
 group :development, :test do
   gem 'sqlite3', '1.3.5'
 #  gem 'rspec'
-  gem 'rspec-rails', '2.11.0'
-  gem 'capybara', '1.1.2'
+  gem 'rspec-rails'
+  gem 'capybara' #, '1.1.2'
   gem 'factory_girl_rails'
-  gem 'cucumber-rails'
   gem 'database_cleaner'
+end
+
+group :test do
+  gem 'cucumber-rails', require: false
 end
 
 group :production do
