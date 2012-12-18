@@ -5,7 +5,7 @@ describe "Static Pages" do
   subject { page }
 
   shared_examples_for "all static pages" do
-    it { should have_selector('tite',  text: fill_title(page_title)) }
+    it { should have_selector('title',  text: fill_title(page_title)) }
     it { should have_selector('h1', text: heading) }
   end
 
@@ -64,14 +64,14 @@ describe "Static Pages" do
   it "should have the correct links" do
     visit root_path
     click_link 'About'
-    page.should have_selector('title', text: 'About')
+    page.should have_selector('h1', text: 'About Us')
     click_link 'Help'
-    page.should have_selector('title', text: 'Help')
+    page.should have_selector('h1', text: 'Help')
     click_link 'Contact'
-    page.should have_selector('title', text: 'Contact')
+    page.should have_selector('h1', text: 'Contact')
     click_link 'Home'
     page.should have_selector('h1', text: 'Sample App')
     click_link 'Sign in'
-    page.should have_selector('title', text: 'Sign in')
+    page.should have_selector('h1', text: 'Sign In')
   end
 end
