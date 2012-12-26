@@ -4,46 +4,6 @@ describe "Authentication" do
 
   subject { page }
 
-  describe "signin page" do
-    before { visit signin_path }
-    it { should have_selector('h1', text: 'Sign In') }
-  end
-
-  describe "signin" do
-    before { visit signin_path }
-
-    describe "with invalid info" do
-      before { click_button "Sign in" }
-
-      it { should have_selector('h1', text: 'Sign In') }
-      it { should have_error_message('Invalid') } 
-
-      describe "after visiting another page" do
-        before { click_link "Home" }
-        it { should_not have_error_message('Invalid') }
-      end
-    end
-
-    describe "with valid info" do
-      let(:user) { FactoryGirl.create(:user) }
-      before { sign_in user }
-
-      it { should have_selector('h1', text: user.username) }
-      it { should have_link('Users', href: users_path) }
-      it { should have_link('Profile', href: user_path(user)) }
-      it { should have_link('Sent', href: messages_from_user_path(user)) }
-      it { should have_link('Received', href: messages_to_user_path(user)) }
-      it { should have_link('Settings', href: edit_user_path(user)) }
-      it { should have_link('Sign out', href: signout_path) }
-      it { should_not have_link('Sign In', href: signin_path) }
-
-      describe "followed by signout" do
-        before { click_link "Sign out" }
-        it { should have_link("Sign in") }
-      end
-    end
-  end
-
   describe "authorization" do
 
     describe "for non-signed in users" do
@@ -188,6 +148,19 @@ describe "Authentication" do
       describe "submitting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }
         specify { response.should redirect_to(root_path) }
+      end
+    end
+
+    describe "as admin user" do
+      let(:admin) { FactoryGirl.create(:admin) }
+
+      before { sign_in admin }
+
+      describe "submitting a DELETE request to the Users#destory action" do
+        before { delete user_path(admin) }
+        it { should redirect_to(users_path) }
+        it { should have_error_message("Admin user cannot delete self!") }
+        it { should_not change(User, :count) }
       end
     end
   end

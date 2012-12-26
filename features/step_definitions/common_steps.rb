@@ -1,4 +1,4 @@
-Given /^the user is not registered$/ do
+Given /^the user is not logged in$/ do
 end
 
 Given /^a logged in user$/ do
@@ -10,8 +10,16 @@ Given /^a logged in user$/ do
   sign_in @user
 end
 
+When /^the user logs out$/ do
+  click_link "Sign out"
+end
+
 When /^the user visits the Home page$/ do
   visit root_path
+end
+
+When /^the user visits the Signin page$/ do
+  visit signin_path
 end
 
 When /^the user visits the Help page$/ do
@@ -30,21 +38,20 @@ Then /^the page should have the heading "(.*?)"$/ do |arg1|
   page.should have_selector('h1', text: arg1)
 end
 
-Then /^the page should have the user feed$/ do
-  @user.feed.each do |post|
-    page.should have_selector("li##{post.id}", text: post.content)
-  end
-end
-
-Then /^the page should have the follow links$/ do
-  page.should have_link("0 following", href: following_user_path(@user))
-  page.should have_link("1 followers", href: followers_user_path(@user))
-end
-
 Then /^the page should have the standard links$/ do
     page.should have_link('About')                          
     page.should have_link('Help')
     page.should have_link('Contact')
     page.should have_link('Home')
     page.should have_link('Sign in')
+end
+
+Then /^the page should have the user links$/ do
+  page.should have_link('Users', href: users_path)
+  page.should have_link('Profile', href: user_path(@user))
+  page.should have_link('Sent', href: messages_from_user_path(@user))
+  page.should have_link('Received', href: messages_to_user_path(@user))
+  page.should have_link('Settings', href: edit_user_path(@user))
+  page.should have_link('Sign out', href: signout_path)
+  page.should_not have_link('Sign in', href: signin_path)
 end
