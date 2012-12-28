@@ -10,6 +10,12 @@ Given /^a logged in user$/ do
   sign_in @user
 end
 
+Given /^a logged in admin user$/ do
+  # create an admin user, no posts or relationships
+  @user = FactoryGirl.create(:admin)
+  sign_in(@user)
+end
+
 When /^the user logs out$/ do
   click_link "Sign out"
 end
@@ -32,6 +38,10 @@ end
 
 When /^the user visits the Contact page$/ do
   visit contact_path
+end
+
+When /^the user visits the User Search page$/ do
+  visit users_path
 end
 
 Then /^the page should have the heading "(.*?)"$/ do |arg1|
