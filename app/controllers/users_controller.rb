@@ -8,6 +8,9 @@ class UsersController < ApplicationController
 
   def index
     @users = User.search(params[:search], params[:page])
+    if @users.empty?
+      flash.now[:error] = "No users found."
+    end
   end
 
   def show

@@ -7,12 +7,12 @@ Feature: General Authentication
 
 	Scenario: Invalid signin produces an error message
 		Given a failed login attempt
-		Then the page should have the signin error message
+		Then the page should have the error message "Invalid"
 
 	Scenario: Signin error message clears itself on later pages
 		Given a failed login attempt
 		When the user visits the Home page
-		Then the page should not have the signin error message
+		Then the page should not have the error message "Invalid"
 
 	Scenario: Valid signin grants access to user links
 		Given a logged in user

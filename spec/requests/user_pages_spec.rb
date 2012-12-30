@@ -99,40 +99,6 @@ describe "User Pages" do
     end
   end
 
-  describe "delete links in index" do
-    let!(:user) { FactoryGirl.create(:user) }
-    before(:all) { 3.times { FactoryGirl.create(:user) } }
-    after(:all) { User.delete_all }
-
-    describe "as non-admin user" do
-      before(:each) do
-        sign_in user
-        visit users_path
-      end
-
-      it { should_not have_link('delete') }
-    end
-
-    describe "as an admin user" do
-      let(:admin) { FactoryGirl.create(:admin) }
-      let(:other_admin) { FactoryGirl.create(:admin) }
-
-      before do
-        sign_in admin
-        visit users_path
-      end
-
-      it { should have_link('delete', href: user_path(user)) }
-
-      it "should be able to delete another user" do
-        expect { click_link("delete-#{user.id}") }.to change(User, :count).by(-1)
-      end
-
-      it { should_not have_link('delete', href: user_path(admin)) }
-
-    end
-  end
-
   describe "profile page" do
     let(:user) { FactoryGirl.create(:user) }
     let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Foo") }

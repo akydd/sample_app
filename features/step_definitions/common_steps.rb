@@ -1,19 +1,21 @@
 Given /^the user is not logged in$/ do
 end
 
-Given /^a logged in user$/ do
-  # create a user with posts and a follower
-  @user = FactoryGirl.create(:user)
+Given /^a logged in( admin)? user$/ do |admin|
+  # create a user
+  if admin.nil? || admin.length == 0
+    @user = FactoryGirl.create(:user)
+  else
+    @user = FactoryGirl.create(:admin)
+  end
   FactoryGirl.create(:micropost, user: @user)
   @other_user = FactoryGirl.create(:user)
   @other_user.follow!(@user)
   sign_in @user
 end
 
-Given /^a logged in admin user$/ do
-  # create an admin user, no posts or relationships
-  @user = FactoryGirl.create(:admin)
-  sign_in(@user)
+Given /^a user with username "(.*?)"$/ do |name|
+  FactoryGirl.create(:user, username: name)
 end
 
 When /^the user logs out$/ do
@@ -48,12 +50,28 @@ Then /^the page should have the heading "(.*?)"$/ do |arg1|
   page.should have_selector('h1', text: arg1)
 end
 
+Then /^the page should have the success message "(.*?)"$/ do |msg|
+  page.should have_selector('div.alert.alert-success', text: msg)
+end
+
+Then /^the page should have the error message "(.*?)"$/ do |msg|
+  page.should have_selector('div.alert.alert-error', text: msg)
+end
+
+Then /^the page should not have the error message "(.*?)"$/ do |msg|
+  page.should_not have_selector('div.alert.alert-error', text: msg)
+end
+
+Then /^the page should not have an error message$/ do
+  page.should_not have_selector('div.alert.alert-error')
+end
+
 Then /^the page should have the standard links$/ do
-    page.should have_link('About')                          
-    page.should have_link('Help')
-    page.should have_link('Contact')
-    page.should have_link('Home')
-    page.should have_link('Sign in')
+  page.should have_link('About')                          
+  page.should have_link('Help')
+  page.should have_link('Contact')
+  page.should have_link('Home')
+  page.should have_link('Sign in')
 end
 
 Then /^the page should have the user links$/ do
