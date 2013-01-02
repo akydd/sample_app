@@ -26,6 +26,10 @@ When /^the user visits the Home page$/ do
   visit root_path
 end
 
+When /^the user visits the Signup page$/ do
+  visit signup_path
+end
+
 When /^the user visits the Signin page$/ do
   visit signin_path
 end
@@ -56,6 +60,10 @@ end
 
 Then /^the page should have the error message "(.*?)"$/ do |msg|
   page.should have_selector('div.alert.alert-error', text: msg)
+end
+
+Then /^the page should have an error message$/ do
+  page.should have_selector('div.alert.alert-error')
 end
 
 Then /^the page should not have the error message "(.*?)"$/ do |msg|
