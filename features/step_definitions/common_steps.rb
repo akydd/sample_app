@@ -34,6 +34,10 @@ When /^the user visits the Signin page$/ do
   visit signin_path
 end
 
+When /^the user visits the Edit Profile page$/ do
+  visit edit_user_path(@user)
+end
+
 When /^the user visits the Help page$/ do
   visit help_path
 end
