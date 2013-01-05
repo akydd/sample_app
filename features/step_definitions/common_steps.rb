@@ -1,16 +1,19 @@
 Given /^the user is not logged in$/ do
 end
 
-Given /^a logged in( admin)? user$/ do |admin|
+Given /^a logged in( admin)? user( with a profile)?$/ do |admin, profile|
   # create a user
   if admin.nil? || admin.length == 0
     @user = FactoryGirl.create(:user)
   else
     @user = FactoryGirl.create(:admin)
   end
-  FactoryGirl.create(:micropost, user: @user)
-  @other_user = FactoryGirl.create(:user)
-  @other_user.follow!(@user)
+
+  if !profile.nil? && profile.length != 0
+    FactoryGirl.create(:micropost, user: @user)
+    @other_user = FactoryGirl.create(:user)
+    @other_user.follow!(@user)
+  end
   sign_in @user
 end
 
@@ -54,8 +57,20 @@ When /^the user visits the User Search page$/ do
   visit users_path
 end
 
-Then /^the page should have the heading "(.*?)"$/ do |arg1|
-  page.should have_selector('h1', text: arg1)
+When /^the user visits the Followed Users page$/ do
+  visit following_user_path(@user)
+end
+
+When /^the user visits the Followers page$/ do
+  visit followers_user_path(@user)
+end
+
+Then /^the page should have the (sub)?heading "(.*?)"$/ do |sub, arg1|
+  if sub.nil? || sub.length == 0 then
+    page.should have_selector('h1', text: arg1)
+  else
+    page.should have_selector('h3', text: arg1)
+  end
 end
 
 Then /^the page should have the success message "(.*?)"$/ do |msg|

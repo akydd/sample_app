@@ -6,7 +6,7 @@ Feature: static pages
 		And the page should have the standard links
 
 	Scenario: Authenticated visit to the home page
-		Given a logged in user
+		Given a logged in user with a profile
 		When the user visits the Home page
 		Then the page should have the user feed
 		And the page should have the follow links
