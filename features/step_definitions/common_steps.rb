@@ -57,6 +57,10 @@ When /^the user visits the User Search page$/ do
   visit users_path
 end
 
+When /^the user visits the other user's profile page$/ do
+  visit user_path(@other_user)
+end
+
 When /^the user visits the Followed Users page$/ do
   visit following_user_path(@user)
 end
@@ -91,6 +95,10 @@ end
 
 Then /^the page should not have an error message$/ do
   page.should_not have_selector('div.alert.alert-error')
+end
+
+Then /^the page should have the "(.*?)" button$/ do |text|
+  page.should have_button text
 end
 
 Then /^the page should have the standard links$/ do
