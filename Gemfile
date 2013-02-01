@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.9'
+gem 'rails', '3.2.11'
 gem 'will_paginate'
 gem 'bootstrap-sass', '2.1'
 gem 'bcrypt-ruby'
@@ -51,9 +51,8 @@ gem 'gravatar_image_tag'
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
-#  gem 'rspec'
-  gem 'rspec-rails'
-  gem 'capybara' #, '1.1.2'
+  gem "rspec-rails", ">= 2.0.1"
+  gem 'capybara'
   gem 'factory_girl_rails'
   gem 'database_cleaner'
 end
