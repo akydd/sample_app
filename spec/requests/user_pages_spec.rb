@@ -1,47 +1,6 @@
 require 'spec_helper'
 
 describe "User Pages" do
-  subject { page }
-
-  describe "message pages" do
-
-    let(:user) { FactoryGirl.create(:user) }
-    let(:other_user) { FactoryGirl.create(:user) }
-    let(:msg_to) { FactoryGirl.build(:message, sender: other_user,
-                                     recipient: user,
-                                     content: "message to") }
-    let(:msg_from) { FactoryGirl.build(:message, sender: user,
-                                       recipient: other_user,
-                                       content: "message from") }
-
-    before do
-      user.follow!(other_user)
-      other_user.follow!(user)
-      msg_to.save
-      msg_from.save
-      sign_in user
-    end
-
-    describe "messages to" do
-      before do
-        visit messages_to_user_path(user)
-      end
-
-      it { should have_selector("span.content", text: msg_to.content) }
-      it { should have_content("Sent from") }
-      it { should have_link(other_user.username, href: user_path(other_user)) }
-    end
-
-    describe "messages from" do
-      before do
-        visit messages_from_user_path(user)
-      end
-
-      it { should have_selector("span.content", text: msg_from.content) }
-      it { should have_content("Sent to") }
-      it { should have_link(other_user.username, href: user_path(other_user)) }
-    end
-  end
 
   describe "index" do
 

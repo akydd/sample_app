@@ -17,6 +17,21 @@ Given /^a logged in( admin)? user( with a profile)?$/ do |admin, profile|
   sign_in @user
 end
 
+Given /^a logged in user and another( followed| following)? user$/ do |follow|
+  @other_user = FactoryGirl.create(:user)
+  steps %Q{
+    Given a logged in user
+  }
+  if !follow.nil? && follow.length > 0
+    if follow.strip == "followed"
+      @user.follow!(@other_user)
+    else
+      @other_user.follow!(@user)
+    end
+  end
+end
+
+
 Given /^a user with username "(.*?)"$/ do |name|
   FactoryGirl.create(:user, username: name)
 end
@@ -67,6 +82,14 @@ end
 
 When /^the user visits the Followers page$/ do
   visit followers_user_path(@user)
+end
+
+When /^the user visits the (Sent|Received) Messages page$/ do |arg|
+  if arg == "Received"
+    visit messages_to_user_path(@user)
+  else
+    visit messages_from_user_path(@user)
+  end
 end
 
 Then /^the page should have the (sub)?heading "(.*?)"$/ do |sub, arg1|

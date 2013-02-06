@@ -1,17 +1,3 @@
-Given /^a logged in user and another( followed| following)? user$/ do |follow|
-  @other_user = FactoryGirl.create(:user)
-  steps %Q{
-    Given a logged in user
-  }
-  if !follow.nil? && follow.length > 0
-    if follow.strip == "followed"
-      @user.follow!(@other_user)
-    else
-      @other_user.follow!(@user)
-    end
-  end
-end
-
 When /^the user (un)?follows the other user$/ do |un|
   steps %Q{
     When the user visits the other user's profile page
