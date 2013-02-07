@@ -1,6 +1,12 @@
 Given /^the user is not logged in$/ do
 end
 
+Given /^many registered users$/ do
+  30.times {
+    FactoryGirl.create(:user)
+  }
+end
+
 Given /^a logged in( admin)? user( with a profile)?$/ do |admin, profile|
   # create a user
   if admin.nil? || admin.length == 0
