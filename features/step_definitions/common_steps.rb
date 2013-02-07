@@ -10,7 +10,8 @@ Given /^a logged in( admin)? user( with a profile)?$/ do |admin, profile|
   end
 
   if !profile.nil? && profile.length != 0
-    FactoryGirl.create(:micropost, user: @user)
+    @msg1 = FactoryGirl.create(:micropost, user: @user, content: "Foo")
+    @msg2 = FactoryGirl.create(:micropost, user: @user, content: "Bar")
     @other_user = FactoryGirl.create(:user)
     @other_user.follow!(@user)
   end
@@ -74,6 +75,10 @@ end
 
 When /^the user visits the other user's profile page$/ do
   visit user_path(@other_user)
+end
+
+When /^the user visits the profile page$/ do
+  visit user_path(@user)
 end
 
 When /^the user visits the Followed Users page$/ do
