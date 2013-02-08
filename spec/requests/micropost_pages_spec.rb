@@ -7,59 +7,6 @@ describe "Micropost pages" do
   let(:user) { FactoryGirl.create(:user) }
   before { sign_in user }
 
-  describe "micropost destruction" do
-    before { FactoryGirl.create(:micropost, user: user) }
-
-    describe "as current user" do
-      before { visit root_path }
-
-      it "should delete a micropost" do
-        expect { click_link "delete" }.to change(Micropost, :count).by(-1)
-      end
-    end
-  end
-
-  describe "micropost creation" do
-    before { visit root_path }
-
-    describe "with invalid information" do
-
-      it "should not create a micropost" do
-        expect { click_button "Submit" }.not_to change(Micropost, :count)
-      end
-
-      describe "error messages" do
-        before { click_button "Submit" }
-        it { should have_error_message("Content can't be blank") }
-      end
-    end
-
-    describe "in reply to self" do
-
-      before { fill_in 'command', with: "@#{user.username} here is my reply" }
-
-      it "should not create a micropost" do
-        expect { click_button "Submit" }.not_to change(Micropost, :count)
-      end
-
-      describe "error message" do
-        before { click_button "Submit" }
-        it { should have_error_message("You cannot reply to yourself!") }
-      end
-
-    end
-
-    describe "with valid info" do
-
-      before { fill_in 'command', with: "Lorem ipsum" }
-
-      it "should create a micropost" do
-        expect { click_button "Submit" }.to change(Micropost, :count).by(1)
-      end
-
-    end
-  end
-
   describe "using the micropost form for sending messages" do
     before { visit root_path }
 
