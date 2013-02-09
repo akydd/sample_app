@@ -19,5 +19,6 @@ The sample app has the following modifications:
 	* unfollow a user by typing _unfollow [username]_ into the post text box
 	* send a direct message to a follower by typing _dm [username] [message
 	  text] or _d [username] [message text]
+* TODO: Rspec request tests have been replaced with equivalent cucumber tests
 
 App is deployed to [Heroku](https://sample-app-extended-akydd.herokuapp.com/).
