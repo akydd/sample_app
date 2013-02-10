@@ -35,6 +35,11 @@ Then /^the message should not be created$/ do
   @user.sent_messages.size.should == 0
 end
 
+Then /^the message should be created$/ do
+  @user.sent_messages.size.should == 1
+  @other_user.received_messages.size.should == 1
+end
+
 Then /^the (Sent|Received) messages page should have the message$/ do |arg|
   steps %Q{
     When the user visits the #{arg} Messages page
