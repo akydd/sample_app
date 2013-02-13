@@ -1,3 +1,8 @@
+Given /^a user$/ do
+  @user = FactoryGirl.create(:user)
+end
+
+
 Given /^the user is not logged in$/ do
 end
 
@@ -5,6 +10,10 @@ Given /^many registered users$/ do
   30.times {
     FactoryGirl.create(:user)
   }
+end
+
+When /^the user signs in$/ do
+  sign_in @user
 end
 
 Given /^a logged in( admin)? user( with a profile)?$/ do |admin, profile|
@@ -21,7 +30,9 @@ Given /^a logged in( admin)? user( with a profile)?$/ do |admin, profile|
     @other_user = FactoryGirl.create(:user)
     @other_user.follow!(@user)
   end
-  sign_in @user
+  steps %Q{
+    When the user signs in
+  }
 end
 
 Given /^a logged in user and another( followed| following)? user$/ do |follow|
