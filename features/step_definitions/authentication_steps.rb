@@ -18,10 +18,6 @@ Then /^the user is redirected to the Signin page$/ do
   page.should have_selector('h1', text: 'Sign In')
 end
 
-When /^the Update Action is accessed without signin$/ do
-  put user_path(@user)
-end
-
 When /^the User Search page is accessed without signin$/ do
   steps %Q{
     When the user visits the User Search page

@@ -1,7 +1,7 @@
 Feature: Authentication
 	Background:
 		Given a user
-
+	
 	Scenario: Authenticad access to protected pages
 		When the user signs in
 		And  the user tries to access a protected page
@@ -9,10 +9,6 @@ Feature: Authentication
 
 	Scenario: Unauthenticated access to the Edit Profile page
 		When the Edit Profile page is accessed without signin
-		Then the user is redirected to the Signin page
-
-	Scenario: Unauthenticated access to the User Update action
-		When the Update Action is accessed without signin
 		Then the user is redirected to the Signin page
 
 	Scenario: Unauthenticated access to the User Search page
